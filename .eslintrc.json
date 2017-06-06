@@ -1,0 +1,55 @@
+{
+    "env": {
+        "es6": true,
+        "node": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": 8,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "impliedStrict": true
+        }
+    },
+    "rules": {
+        "indent": [
+            "warn",
+            4
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "warn",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-console": [
+            "off"
+        ],
+        "no-unused-vars": [
+            "warn"
+        ],
+        "no-var": [
+            "warn"
+        ],
+        "eol-last": [
+            "error",
+            "always"
+        ],
+        "no-trailing-spaces": [
+            "warn"
+        ],
+        "no-multiple-empty-lines": [
+            "warn",
+            {
+                "max": 2,
+                "maxEOF": 1
+            }
+        ]
+    }
+}
