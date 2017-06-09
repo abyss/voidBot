@@ -1,4 +1,5 @@
 {
+    "root": true,
     "env": {
         "es6": true,
         "node": true
@@ -12,44 +13,20 @@
         }
     },
     "rules": {
-        "indent": [
-            "warn",
-            4
-        ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "warn",
-            "single"
-        ],
-        "semi": [
-            "error",
-            "always"
-        ],
-        "no-console": [
-            "off"
-        ],
-        "no-unused-vars": [
-            "warn"
-        ],
-        "no-var": [
-            "warn"
-        ],
-        "eol-last": [
-            "error",
-            "always"
-        ],
-        "no-trailing-spaces": [
-            "warn"
-        ],
+        // Override eslint:recommended
+        "no-console": ["off"],
+        "no-unused-vars": ["warn"],
+
+        // Additional Options
+        "indent": ["warn", 4],
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["warn", "single"],
+        "semi": ["error", "always"],
+        "no-var": ["warn"],
+        "eol-last": ["error","always"],
+        "no-trailing-spaces": ["warn"],
         "no-multiple-empty-lines": [
-            "warn",
-            {
-                "max": 2,
-                "maxEOF": 1
-            }
+            "warn", { "max": 2, "maxEOF": 1 }
         ]
     }
 }

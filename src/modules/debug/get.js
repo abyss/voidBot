@@ -1,4 +1,4 @@
-exports.run = async (msg, args) => {
+exports.run = async (msg) => {
     try {
         const result = await this.mod.dbTestGet(msg.guild.id);
         await msg.channel.send(`${result}`);

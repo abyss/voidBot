@@ -1,0 +1,3 @@
+data/*
+src/modules/_command_template.js
+src/modules/_module_template.js
