@@ -16,8 +16,6 @@ class CommandHandler {
         const processedCommand = this.processCommandAttempt(message);
         if (processedCommand.type === 'invalid') { return; }
 
-        this.bot.debug(`${processedCommand.type} | ${processedCommand.base} | ${processedCommand.args}`);
-
         const command = this.getCommand(processedCommand.base);
         if (!command) { return; }
 

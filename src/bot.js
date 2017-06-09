@@ -1,14 +1,17 @@
 const discordjs = require('discord.js');
 const chalk = require('chalk');
+const path = require('path');
 
 const ConfigHandler = require('./handlers/config-handler');
 const CommandHandler = require('./handlers/command-handler');
 const ModuleHandler = require('./handlers/module-handler');
+const LowDBHandler = require('./handlers/lowdb-handler');
 
 const bot = new discordjs.Client();
 bot.config = new ConfigHandler(bot);
 bot.commandHandler = new CommandHandler(bot);
 bot.moduleHandler = new ModuleHandler(bot);
+bot.db = new LowDBHandler(bot, path.resolve(__dirname, '../data'));
 
 //TODO: Proper Error Handler for the bot
 

@@ -1,4 +1,4 @@
-exports.run = async (msg, args) => { // eslint-disable-line
+exports.run = async (msg, args) => {
     // Code to run whenever this command is called goes here!
     // Command also has access to (injected) this.mod, and this.cmdId
 };

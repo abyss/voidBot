@@ -14,8 +14,8 @@ class Module {
 
     get config() {
         return {
-            name: 'Base',
-            description: 'Base Module',
+            name: 'ModuleClass',
+            description: 'ModuleClass',
             debug: true // This makes it unusable to anyone besides process.env.OWNER
         };
     }
