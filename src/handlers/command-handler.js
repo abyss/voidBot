@@ -1,11 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+const _ = require('lodash');
 
 class CommandHandler {
     constructor(bot) {
         this.bot = bot;
         this.commands = [];
-
     }
 
     init() {
@@ -19,9 +19,24 @@ class CommandHandler {
         const command = this.getCommand(processedCommand.base);
         if (!command) { return; }
 
-        //TODO: Respect debug, location, etc
+        if (command.config.location === 'NONE') { return; }
+
+        if (command.config.location === 'DM_ONLY' &&
+            !(message.channel.type === 'dm')) { return; }
+
+        if (command.config.location === 'GUILD_ONLY' &&
+            !(message.channel.type === 'text')) { return; }
+
+        if (command.config.debug || command.mod.config.debug) {
+            if (!this.bot.config.isOwner(message.author)) { return; }
+        }
+
+        if (message.channel.type === 'text') {
+            if (!this.hasCommandPermissions(message.member, command)) { return; }
+        }
+
         command.run(message, processedCommand.args).catch(error => {
-            message.channel.send(`:interrobang:  |  An error has occured: ${error}`);
+            message.channel.send(`**:interrobang:  |  An error has occured:** ${error}`);
             this.bot.error(`Command error in ${command.id}: ${error}`);
         });
     }
@@ -82,24 +97,30 @@ class CommandHandler {
         if (typeof command.config.description !== 'string') { return 'Config object missing "description"'; }
 
         if (typeof command.config.location !== 'string') {
-            return 'Config object missing "location"';
+            this.bot.error(`Validation Error: \'${command.id}\' missing location. Using \'NONE\'`);
+            command.config.location = 'NONE';
         } else {
             let location = command.config.location;
-            if (!['ALL', 'GUILD_ONLY', 'DM_ONLY'].includes(location)) {
-                return 'Config object location is incorrect';
+            if (!['ALL', 'GUILD_ONLY', 'DM_ONLY', 'NONE'].includes(location)) {
+                this.bot.error(`Validation Error: \'${command.id}\' invalid location. Using \'NONE\'`);
+                command.config.location = 'NONE';
             }
         }
 
-        // TODO: Make these optional, if not included, add them as empty.
-        if (!(command.config.alias instanceof Array)) { return 'Config object missing "alias" array'; }
-        if (!(command.config.permissions instanceof Array)) { return 'Config object missing "permissions" array'; }
+        if (!(command.config.alias instanceof Array)) {
+            command.config.alias = [];
+        }
 
-        // TODO: Check for duplicates of command or alias.
+        if (!(command.config.permissions instanceof Array)) {
+            command.config.alias = [];
+        }
+
+        // TODO: Check for duplicates of command or alias?
     }
 
     registerCommand(command) {
         if (this.commands.includes(command)) {
-            throw `${command.id} is already registered.`;
+            throw `Cannot register '${command.id}', already registered.`;
         }
 
         command.config.permissions.forEach(permission => {
@@ -109,24 +130,50 @@ class CommandHandler {
         this.commands.push(command);
     }
 
-    unregisterCommand(command) { // eslint-disable-line
-        // TODO: Remove Command from commands
+    unregisterCommand(command) {
+        if (!this.commands.includes(command)) {
+            throw `Cannot unregister '${command.id}', not registered.`;
+        }
+
+        _.pull(this.commands, command);
     }
 
-    loadCommand(cmdId) { // eslint-disable-line
-        //TODO: Load a command from cmdId
-        // Find module, find command
-        // Pass to loadCommandFile()
-        // this.loadCommandFile(mod, `${command}.js`, skipCheck);
+    hasCommandPermissions(member, command) {
+        // TODO: Allow per-guild permission settings.
+        return member.hasPermission(command.config.permissions);
+    }
+
+    loadCommand(cmdText) {
+        const split = cmdText.split('.');
+
+        if (split.length !== 2) {
+            throw `Load command ${cmdText} failed: not exactly one period.`;
+        }
+
+        const modId = split[0];
+        const cmdId = split[1];
+
+        const mod = this.bot.moduleHandler.getModule(modId);
+
+        if (!mod) {
+            throw `No module ${modId} found.`;
+        }
+
+        this.loadCommandFile(mod, `${cmdId}.js`);
     }
 
     // Load an individual command from file for provided mod
     loadCommandFile(mod, file, skipCheck = false) {
         const fileLoc = path.resolve(mod.moduleFolder, file);
 
-        if (!skipCheck && !fs.statSync(fileLoc).isFile()) {
+        try {
+            if (!skipCheck && !fs.statSync(fileLoc).isFile()) {
+                throw `${fileLoc} is not a file`;
+            }
+        } catch (error) {
             throw `No file '${fileLoc}' found`;
         }
+
 
         if (path.parse(file).ext !== '.js') {
             throw `Provided file '${file}' is not a js file`;
@@ -136,13 +183,14 @@ class CommandHandler {
         const cmdName = path.parse(file).name;
         const cmdId = `${mod.id}.${cmdName}`;
 
+        // Load in the ID and mod reference
+        command.id = cmdId;
+        command.mod = mod;
+
         const check = this.validateCommand(command);
         if (check) {
             throw `Error validating command '${cmdId}': ${check}`;
         }
-
-        command.id = cmdId;
-        command.mod = mod;
 
         mod.commands.push(command);
         this.registerCommand(command);

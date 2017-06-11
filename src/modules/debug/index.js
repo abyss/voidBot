@@ -27,4 +27,12 @@ module.exports = class DebugModule extends Module {
             throw error;
         }
     }
+
+    async loadCommand(cmdText) {
+        try {
+            this.bot.commandHandler.loadCommand(cmdText);
+        } catch (error) {
+            throw `No command ${cmdText} found`;
+        }
+    }
 };

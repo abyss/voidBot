@@ -16,6 +16,10 @@ class ModuleHandler {
         //TODO: Run init() on all loaded modules?
     }
 
+    getModule(modId) {
+        return this.modules.find(mod => mod.id === modId);
+    }
+
     validateModule(ModClass) {
         if (!(ModClass.prototype instanceof Module)) { return 'not a Module class'; }
         //TODO: Check for duplicate module?
@@ -59,7 +63,6 @@ class ModuleHandler {
         });
     }
 
-    //TODO: Do I need this? Maybe not.
     runAll(methodName, params) {
         if (!(params instanceof Array)) {
             params = [params];

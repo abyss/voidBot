@@ -42,6 +42,19 @@ class ConfigHandler {
         return owners;
     }
 
+    isOwner(user) {
+        if (!user) { return undefined; }
+
+        let id;
+        if (typeof user === 'string') {
+            id = user;
+        } else if (typeof user.id === 'string') {
+            id = user.id;
+        }
+
+        return this.owners.includes(id);
+    }
+
     parseDebug() {
         let debug = process.env.DEBUG;
 
