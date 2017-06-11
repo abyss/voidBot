@@ -1,33 +1,15 @@
 require('dotenv').config();
-const chalk = require('chalk');
 
 class ConfigHandler {
     constructor(bot) {
+        this.bot = bot;
         this.owners = this.parseOwners();
         this.prefix = process.env.DEFAULTPREFIX || '/';
         this.debug = this.parseDebug();
         this.version = process.env.npm_package_version;
         this._permissions = new Set(['SEND_MESSAGES', 'READ_MESSAGES']);
 
-        this.injectLogging(bot);
         this.validateToken();
-    }
-
-    //TODO: Logging Handler
-    injectLogging(bot) {
-        bot.debug = (output) => {
-            if (this.debug === true) {
-                return console.log(`${chalk.yellow('[D]')} ${output}`);
-            }
-        };
-
-        bot.log = (output) => {
-            return console.log(`${chalk.blue('[-]')} ${output}`);
-        };
-
-        bot.error = (output) => {
-            return console.error(`${chalk.red('[E]')} ${output}`);
-        };
     }
 
     validateToken() {
