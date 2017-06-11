@@ -115,7 +115,14 @@ class CommandHandler {
             command.config.alias = [];
         }
 
-        // TODO: Check for duplicates of command or alias?
+        if (this.getCommand(command.config.cmd)) {
+            return 'duplicate command';
+        }
+
+        if (command.config.alias.some(alias => this.getCommand(alias))) {
+            return 'duplicate alias';
+        }
+
     }
 
     registerCommand(command) {
@@ -171,7 +178,7 @@ class CommandHandler {
                 throw `${fileLoc} is not a file`;
             }
         } catch (error) {
-            throw `No file '${fileLoc}' found`;
+            throw `No file './src/modules/${mod.id}/${file}' found`;
         }
 
 
