@@ -7,6 +7,7 @@ const ConfigHandler = require('./handlers/config-handler');
 const CommandHandler = require('./handlers/command-handler');
 const ModuleHandler = require('./handlers/module-handler');
 const LowDBHandler = require('./handlers/lowdb-handler');
+const NeDBHandler = require('./handlers/nedb-handler');
 
 const bot = new discordjs.Client();
 bot.loggingHandler = new LoggingHandler(bot);
@@ -14,7 +15,7 @@ bot.config = new ConfigHandler(bot);
 bot.commandHandler = new CommandHandler(bot);
 bot.moduleHandler = new ModuleHandler(bot);
 bot.db = new LowDBHandler(bot, path.resolve(__dirname, '../data'));
-
+bot.db2 = new NeDBHandler(bot, path.resolve(__dirname, '../data2'));
 //TODO: Proper Error Handler for the bot
 
 function setTitle(title) {

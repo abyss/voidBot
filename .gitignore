@@ -4,12 +4,13 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.idea
 
 # Node
 node_modules
 
 # Application
-data
+data*
 .env
 config.json
 *.sqlite
