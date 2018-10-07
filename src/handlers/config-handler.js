@@ -13,7 +13,7 @@ class ConfigHandler {
     }
 
     validateToken() {
-        if (!process.env.TOKEN || !/^[A-Za-z0-9\._\-]+$/.test(process.env.TOKEN)) {
+        if (!process.env.TOKEN || !/^[A-Za-z0-9._-]+$/.test(process.env.TOKEN)) {
             this.bot.error('Environment variable TOKEN is missing or incorrect.');
             process.exit(1);
         }

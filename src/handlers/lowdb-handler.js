@@ -1,6 +1,6 @@
 const low = require('lowdb');
+const FileAsync = require('lowdb/adapters/FileAsync');
 const DBInterface = require('./db-interface');
-const fileAsync = require('lowdb/lib/storages/file-async');
 const path = require('path');
 
 class LowDBHandler extends DBInterface {
@@ -12,17 +12,14 @@ class LowDBHandler extends DBInterface {
 
     getDBHandle(guild) {
         if (!(typeof guild === 'string')) { throw 'dbHandle must be passed a string!'; }
-        const jsonFile = path.resolve(this.dataFolder, guild);
-
-        return low(
-            `${jsonFile}.json`,
-            { storage: fileAsync }
-        );
+        const jsonFile = path.resolve(this.dataFolder, guild) + '.json';
+        const adapter = new FileAsync(jsonFile);
+        return low(adapter);
     }
 
     async get(guild, key) {
         try {
-            const db = this.getDBHandle(guild);
+            const db = await this.getDBHandle(guild);
             return await db.get(key).value();
         } catch (error) {
             throw `LowDBHandler Get Error: ${error}`;
@@ -31,7 +28,7 @@ class LowDBHandler extends DBInterface {
 
     async set(guild, key, data) {
         try {
-            const db = this.getDBHandle(guild);
+            const db = await this.getDBHandle(guild);
             await db.set(key, data).write();
         } catch (error) {
             throw `LowDBHandler Set Error: ${error}`;
@@ -40,7 +37,7 @@ class LowDBHandler extends DBInterface {
 
     async delete(guild, key) {
         try {
-            const db = this.getDBHandle(guild);
+            const db = await this.getDBHandle(guild);
             db.unset(key).write();
         } catch (error) {
             throw `LowDBHandler Delete Error: ${error}`;

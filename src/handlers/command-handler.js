@@ -97,12 +97,12 @@ class CommandHandler {
         if (typeof command.config.description !== 'string') { return 'Config object missing "description"'; }
 
         if (typeof command.config.location !== 'string') {
-            this.bot.error(`Validation Error: \'${command.id}\' missing location. Using \'NONE\'`);
+            this.bot.error(`Validation Error: '${command.id}' missing location. Using 'NONE'`);
             command.config.location = 'NONE';
         } else {
             let location = command.config.location;
             if (!['ALL', 'GUILD_ONLY', 'DM_ONLY', 'NONE'].includes(location)) {
-                this.bot.error(`Validation Error: \'${command.id}\' invalid location. Using \'NONE\'`);
+                this.bot.error(`Validation Error: '${command.id}' invalid location. Using 'NONE'`);
                 command.config.location = 'NONE';
             }
         }

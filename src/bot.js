@@ -52,7 +52,7 @@ process.on('unhandledRejection', err => {
 });
 
 process.on('uncaughtException', (err) => {
-    const errorMsg = (err.stack || err || '').toString().replace(new RegExp(`${__dirname}\/`, 'g'), './');
+    const errorMsg = (err.stack || err || '').toString().replace(new RegExp(`${__dirname}/`, 'g'), './');
     console.error(`uncaughtException: \n${errorMsg}`);
 });
 
