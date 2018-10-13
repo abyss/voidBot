@@ -1,14 +1,15 @@
+const send = require('../../includes/helpers').send;
+
 exports.run = async (msg) => {
-    msg.channel.send(':ping_pong:  **|  Pong!**').catch(error => {
-        this.mod.bot.error(`There was an error posting ping: ${error}`);
-    });
+    await send(msg.channel, ':ping_pong:  **|  Pong!**');
 };
 
 exports.config = {
     name: 'Ping',
     cmd: 'ping',
     alias: ['p'],
-    permissions: [],
+    botPermissions: [], // Permissions needed by the bot to use this command.
+    defaultPermissions: [''], // Default permissions to use this command by user
     location: 'ALL', // 'GUILD_ONLY', 'DM_ONLY', 'ALL'
     description: 'Causes the bot to respond with \'Pong!\'',
     debug: false

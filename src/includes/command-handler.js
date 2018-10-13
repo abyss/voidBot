@@ -1,11 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
+const PermissionsHandler = require('./permissions-handler');
 
 class CommandHandler {
     constructor(bot) {
         this.bot = bot;
         this.commands = [];
+        this.permissions = new PermissionsHandler(bot);
     }
 
     init() {
@@ -32,7 +34,7 @@ class CommandHandler {
         }
 
         if (message.channel.type === 'text') {
-            if (!this.hasCommandPermissions(message.member, command)) { return; }
+            if (!await this.permissions.hasCommandPermissions(message.guild, message.member, command)) { return; }
         }
 
         command.run(message, processedCommand.args).catch(error => {
@@ -64,6 +66,7 @@ class CommandHandler {
             return cmdDetails;
         }
 
+        // TODO: Allow Server to set prefix
         if (message.content.startsWith(this.bot.config.prefix)) {
             const prefixLength = this.bot.config.prefix.length;
             const newSplit = message.content.substr(prefixLength).trim().split(' ');
@@ -111,8 +114,8 @@ class CommandHandler {
             command.config.alias = [];
         }
 
-        if (!(command.config.permissions instanceof Array)) {
-            command.config.alias = [];
+        if (!(command.config.botPermissions instanceof Array)) {
+            command.config.botPermissions = [];
         }
 
         if (this.getCommand(command.config.cmd)) {
@@ -130,7 +133,7 @@ class CommandHandler {
             throw `Cannot register '${command.id}', already registered.`;
         }
 
-        command.config.permissions.forEach(permission => {
+        command.config.botPermissions.forEach(permission => {
             this.bot.config.registerPermission(permission);
         });
 
@@ -143,11 +146,6 @@ class CommandHandler {
         }
 
         _.pull(this.commands, command);
-    }
-
-    hasCommandPermissions(member, command) {
-        // TODO: Allow per-guild permission settings.
-        return member.hasPermission(command.config.permissions);
     }
 
     loadCommand(cmdText) {
@@ -167,6 +165,25 @@ class CommandHandler {
         }
 
         this.loadCommandFile(mod, `${cmdId}.js`);
+    }
+
+    unloadCommand(cmdText) {
+        const split = cmdText.split('.');
+
+        if (split.length !== 2) {
+            throw `Load command ${cmdText} failed: not exactly one period.`;
+        }
+
+        const command = this.getCommandByID(cmdText);
+        if (!command) {
+            throw `No command ${cmdText} found.`;
+        }
+
+        const mod = command.mod;
+        delete require.cache[require.resolve(`../modules/${mod.id}/${split[1]}`)];
+
+        _.pull(mod.commands, command);
+        this.unregisterCommand(command);
     }
 
     // Load an individual command from file for provided mod

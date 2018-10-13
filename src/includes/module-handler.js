@@ -1,5 +1,5 @@
 const path = require('path');
-const Module = require('../modules/module-class');
+const Module = require('./module-class');
 const fs = require('fs');
 
 class ModuleHandler {
@@ -20,8 +20,8 @@ class ModuleHandler {
         return this.modules.find(mod => mod.id === modId);
     }
 
-    validateModule(ModClass) {
-        if (!(ModClass.prototype instanceof Module)) { return 'not a Module class'; }
+    validateModule(ModObject) {
+        if (!(ModObject.prototype instanceof Module)) { return 'not a Module class'; }
         //TODO: Check for duplicate module?
         return '';
     }
@@ -33,13 +33,13 @@ class ModuleHandler {
             throw `No module '${id}' found`;
         }
 
-        const ModClass = require(modFolder);
-        const check = this.validateModule(ModClass);
+        const ModObject = require(modFolder);
+        const check = this.validateModule(ModObject);
         if (check) {
             throw `Error validating module '${id}': ${check}`;
         }
 
-        const mod = new ModClass(this, id);
+        const mod = new ModObject(this, id, modFolder);
 
         this.modules.push(mod);
         this.bot.log(`Loaded module: ${id}`);

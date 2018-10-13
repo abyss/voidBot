@@ -1,13 +1,13 @@
 const path = require('path');
 
 class Module {
-    constructor(handler, id) {
+    constructor(handler, id, moduleDir) {
         this.handler = handler;
         this.bot = handler.bot;
         this.id = id;
         this.commands = [];
 
-        this.moduleFolder = path.resolve(__dirname, id);
+        this.moduleFolder = path.resolve(moduleDir);
 
         this.bot.commandHandler.loadModCommands(this);
     }

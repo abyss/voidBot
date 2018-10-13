@@ -1,6 +1,6 @@
 const low = require('lowdb');
 const FileAsync = require('lowdb/adapters/FileAsync');
-const DBInterface = require('./db-interface');
+const DBInterface = require('./interfaces/db-interface');
 const path = require('path');
 
 class LowDBHandler extends DBInterface {

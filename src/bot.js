@@ -2,11 +2,11 @@ const discordjs = require('discord.js');
 const chalk = require('chalk');
 const path = require('path');
 
-const LoggingHandler = require('./handlers/logging-handler');
-const ConfigHandler = require('./handlers/config-handler');
-const CommandHandler = require('./handlers/command-handler');
-const ModuleHandler = require('./handlers/module-handler');
-const LowDBHandler = require('./handlers/lowdb-handler');
+const LoggingHandler = require('./includes/logging-handler');
+const ConfigHandler = require('./includes/config-handler');
+const CommandHandler = require('./includes/command-handler');
+const ModuleHandler = require('./includes/module-handler');
+const LowDBHandler = require('./includes/lowdb-handler');
 
 const bot = new discordjs.Client();
 bot.loggingHandler = new LoggingHandler(bot);
@@ -48,7 +48,7 @@ bot.on('message', message => {
 });
 
 process.on('unhandledRejection', err => {
-    console.error(`unhandledRejection: \n${err.stack}`);
+    console.error(`unhandledRejection: \n${err}`);
 });
 
 process.on('uncaughtException', (err) => {
