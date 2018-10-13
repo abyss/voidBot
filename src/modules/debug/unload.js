@@ -11,7 +11,7 @@ exports.config = {
     alias: ['unload'],
     botPermissions: [], // Permissions needed by the bot to use this command.
     defaultPermissions: [], // Default permissions to use this command by user
-    location: 'ALL', // 'GUILD_ONLY', 'DM_ONLY', 'ALL' - where the command can be triggered
+    location: 'ALL', // 'GUILD_ONLY', 'DM_ONLY', 'ALL'
     description: 'Unload a command by id',
     debug: true // This makes it unusable to anyone besides process.env.OWNER
 };

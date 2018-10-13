@@ -39,7 +39,7 @@ class CommandHandler {
 
         command.run(message, processedCommand.args).catch(error => {
             message.channel.send(`**:interrobang:  |  An error has occured:** ${error}`);
-            this.bot.error(`Command error in ${command.id}: ${error}`);
+            // this.bot.error(`Command error in ${command.id}: ${error}`);
         });
     }
 
@@ -84,6 +84,7 @@ class CommandHandler {
         return this.commands.find((cmd) => {
             if (cmd.config.cmd === cmdText) { return true; }
             if (cmd.config.alias.includes(cmdText)) { return true; }
+            if (cmd.id === cmdText) { return true; }
         });
     }
 
@@ -174,13 +175,12 @@ class CommandHandler {
             throw `Load command ${cmdText} failed: not exactly one period.`;
         }
 
-        const command = this.getCommandByID(cmdText);
+        const command = this.getCommand(cmdText);
         if (!command) {
             throw `No command ${cmdText} found.`;
         }
 
         const mod = command.mod;
-        delete require.cache[require.resolve(`../modules/${mod.id}/${split[1]}`)];
 
         _.pull(mod.commands, command);
         this.unregisterCommand(command);
@@ -203,6 +203,8 @@ class CommandHandler {
             throw `Provided file '${file}' is not a js file`;
         }
 
+        // Invalidate the cache incase it's been loaded before and changed
+        delete require.cache[require.resolve(fileLoc.slice(0, -3))];
         const command = require(fileLoc.slice(0, -3));
         const cmdName = path.parse(file).name;
         const cmdId = `${mod.id}.${cmdName}`;

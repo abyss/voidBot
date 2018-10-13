@@ -9,7 +9,7 @@ exports.config = {
     cmd: 'ping',
     alias: ['p'],
     botPermissions: [], // Permissions needed by the bot to use this command.
-    defaultPermissions: [''], // Default permissions to use this command by user
+    defaultPermissions: [], // Default permissions to use this command by user
     location: 'ALL', // 'GUILD_ONLY', 'DM_ONLY', 'ALL'
     description: 'Causes the bot to respond with \'Pong!\'',
     debug: false

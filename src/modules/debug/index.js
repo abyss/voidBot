@@ -27,8 +27,4 @@ module.exports = class DebugModule extends Module {
             throw error;
         }
     }
-
-    async loadCommand(cmdText) {
-        this.bot.commandHandler.loadCommand(cmdText);
-    }
 };

@@ -11,7 +11,7 @@ exports.config = {
     // or NOONE - which rejects everyone.
     botPermissions: [], // Guild permissions needed by the bot to use this command.
     defaultPermissions: [], // Default permissions to use this command by user
-    location: 'ALL', // 'GUILD_ONLY', 'DM_ONLY', 'ALL' - where the command can be triggered
+    location: 'ALL', // 'GUILD_ONLY', 'DM_ONLY', 'ALL' - where the command can be used
     description: 'Description of the command',
     debug: true // If true: unusable to anyone besides process.env.OWNER
 };

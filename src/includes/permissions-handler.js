@@ -35,12 +35,12 @@ class PermissionsHandler {
         return member.hasPermission(commandDefaultPermissions);
     }
 
-    setCommandPermission(guild, cmdId, roleId, state = 'default') {
+    setCommandPermission(guildId, cmdId, roleId, state = 'default') {
         // state can be 'allow' 'deny' or 'default'
         if (state === 'allow' || state === 'deny') {
-            this.bot.db.set(guild, `permissions['${cmdId}'].groups.${roleId}`, state);
+            this.bot.db.set(guildId, `permissions['${cmdId}'].groups.${roleId}`, state);
         } else {
-            this.bot.db.delete(guild, `permissions['${cmdId}'].groups.${roleId}`);
+            this.bot.db.delete(guildId, `permissions['${cmdId}'].groups.${roleId}`);
         }
     }
 }
