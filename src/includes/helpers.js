@@ -60,7 +60,7 @@ exports.findUser = function (guild, userText) {
         ]
     };
 
-    const tagged = userText.match(/^<@&(\d{17,19})>$/);
+    const tagged = userText.match(/^<@!?(1|\d{17,19})>$/);
     if (tagged) {
         userText = tagged[1]; // First is the entire string, second is Id
     }
