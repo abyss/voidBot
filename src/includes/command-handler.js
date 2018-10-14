@@ -50,7 +50,7 @@ class CommandHandler {
             args: []
         };
 
-        const split = message.content.trim().split(' ');
+        const split = message.content.trim().split(/ +/);
 
         if (message.channel.type === 'dm') {
             cmdDetails.type = 'dm';
@@ -69,7 +69,7 @@ class CommandHandler {
         // TODO: Allow Server to set prefix
         if (message.content.startsWith(this.bot.config.prefix)) {
             const prefixLength = this.bot.config.prefix.length;
-            const newSplit = message.content.substr(prefixLength).trim().split(' ');
+            const newSplit = message.content.substr(prefixLength).trim().split(/ +/);
 
             cmdDetails.type = 'prefix';
             cmdDetails.base = newSplit[0];

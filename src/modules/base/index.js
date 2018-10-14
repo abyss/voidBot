@@ -1,5 +1,5 @@
 const Module = require('../../includes/module-class');
-const findRole = require('../../includes/helpers').findRole;
+const { findRole } = require('../../includes/helpers');
 
 module.exports = class BaseModule extends Module {
     get config() {

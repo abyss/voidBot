@@ -1,4 +1,4 @@
-const send = require('../../includes/helpers').send;
+const { send } = require('../../includes/helpers');
 
 exports.run = async (msg, args) => {
     if (!(args.length === 3)) { throw 'Have to pass three arguments'; }

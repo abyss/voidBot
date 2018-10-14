@@ -1,7 +1,7 @@
-const send = require('../../includes/helpers').send;
+const { send } = require('../../includes/helpers');
 
 exports.run = async (msg) => {
-    await send(msg.channel, ':ping_pong:  **|  Pong!**');
+    await send(msg.channel, `:ping_pong:  **|  Pong!** (${this.mod.bot.ping})`);
 };
 
 exports.config = {
