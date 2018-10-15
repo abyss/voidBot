@@ -34,4 +34,12 @@ module.exports = class BaseModule extends Module {
 
         this.bot.commandHandler.permissions.setCommandPermission(guild.id, command.id, role.id, state);
     }
+
+    async setGuildPrefix(guild, prefix) {
+        this.bot.db.set(guild.id, 'prefix', prefix);
+    }
+
+    async getGuildPrefix(guild) {
+        return this.bot.commandHandler.getGuildPrefix(guild);
+    }
 };

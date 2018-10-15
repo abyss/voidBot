@@ -10,7 +10,11 @@ exports.run = async (msg) => {
     const output = '```' + roleList.join('\n') + '```';
 
     await send(msg.channel, output);
+
+    return true;
 };
+
+exports.usage = new Map();
 
 exports.config = {
     name: 'List Roles',

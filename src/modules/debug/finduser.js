@@ -10,7 +10,11 @@ exports.run = async (msg, args) => {
     }
 
     await send(msg.channel, output);
+
+    return true;
 };
+
+exports.usage = new Map();
 
 exports.config = {
     name: 'Find User',

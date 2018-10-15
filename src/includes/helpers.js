@@ -1,5 +1,10 @@
 const Fuse = require('fuse.js');
-const log = new require('./logging-handler');
+const LoggingHandler = require('./logging-handler');
+const log = new LoggingHandler();
+const { resolveColor } = require('discord.js/src/client/ClientDataResolver');
+const { FLAGS } = require('discord.js').Permissions;
+
+// TODO: alwaysId() - if not already an id, get object's id.
 
 exports.send = async function (channel, msg) {
     channel.send(msg).catch(error => {
@@ -18,6 +23,8 @@ exports.hexColor = function (hex) {
 exports.rgbColor = function (red, green, blue) {
     return (red << 16) + (green << 8) + blue;
 };
+
+exports.resolveColor = resolveColor;
 
 exports.findExactRole = function (guild, roleText) {
     // Override "everyone" to "@everyone" for a match
@@ -82,3 +89,6 @@ exports.findUser = function (guild, userText) {
     const results = fuse.search(userText);
     return results[0];
 };
+
+// Extend flags to include NOONE
+exports.EXTENDED_FLAGS = { ...FLAGS, ...{ 'NOONE': '' } };

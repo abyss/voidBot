@@ -27,7 +27,7 @@ class PermissionsHandler {
         // None of the above? Fall back to Default
         const commandDefaultPermissions = command.config.defaultPermissions;
 
-        if (commandDefaultPermissions.includes('NOONE') || commandDefaultPermissions.includes('')) {
+        if (commandDefaultPermissions.includes('NOONE')) {
             return false;
         }
 

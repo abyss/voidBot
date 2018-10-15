@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
 const PermissionsHandler = require('./permissions-handler');
+const { send, EXTENDED_FLAGS } = require('./helpers');
 
 class CommandHandler {
     constructor(bot) {
@@ -14,8 +15,19 @@ class CommandHandler {
         this.TAG_REGEX = new RegExp(`^<@!?${this.bot.user.id}> `);
     }
 
+    async getGuildPrefix(guild) {
+        const prefix = await this.bot.db.get(guild.id, 'prefix');
+        if (prefix) {
+            return prefix;
+        }
+
+        return this.bot.config.prefix;
+    }
+
     async onMessage(message) {
-        const processedCommand = this.processCommandAttempt(message);
+        const processedCommand = await this.processMessage(message);
+
+        // Not a command usage at all
         if (processedCommand.type === 'invalid') { return; }
 
         const command = this.getCommand(processedCommand.base);
@@ -37,13 +49,18 @@ class CommandHandler {
             if (!await this.permissions.hasCommandPermissions(message.guild, message.member, command)) { return; }
         }
 
-        command.run(message, processedCommand.args).catch(error => {
-            message.channel.send(`**:interrobang:  |  An error has occured:** ${error}`);
-            // this.bot.error(`Command error in ${command.id}: ${error}`);
+        const runSuccessfully = await command.run(message, processedCommand.args).catch(error => {
+            send(message.channel, `**:interrobang:  |  An error has occured:** ${error}`);
+            this.bot.error(`Command error in ${command.id}: ${error}`);
         });
+
+        // Only if false, not if undefined
+        if (runSuccessfully === false) {
+            // TODO: print usage instructions from helper function
+        }
     }
 
-    processCommandAttempt(message) {
+    async processMessage(message) {
         const cmdDetails = {
             type: 'invalid',
             base: '',
@@ -52,10 +69,26 @@ class CommandHandler {
 
         const split = message.content.trim().split(/ +/);
 
-        if (message.channel.type === 'dm') {
+        if (message.channel.type === 'dm' || message.channel.type === 'group') {
             cmdDetails.type = 'dm';
             cmdDetails.base = split[0];
             cmdDetails.args = split.slice(1);
+            return cmdDetails;
+        }
+
+        // If it's not a DM and it's not a text channel, we're done here.
+        if (message.channel.type !== 'text') {
+            return cmdDetails;
+        }
+
+        let prefix = await this.getGuildPrefix(message.guild);
+
+        if (message.content.startsWith(prefix)) {
+            const newSplit = message.content.substr(prefix.length).trim().split(/ +/);
+
+            cmdDetails.type = 'prefix';
+            cmdDetails.base = newSplit[0];
+            cmdDetails.args = newSplit.slice(1);
             return cmdDetails;
         }
 
@@ -63,17 +96,6 @@ class CommandHandler {
             cmdDetails.type = 'tag';
             cmdDetails.base = split[1];
             cmdDetails.args = split.slice(2);
-            return cmdDetails;
-        }
-
-        // TODO: Allow Server to set prefix
-        if (message.content.startsWith(this.bot.config.prefix)) {
-            const prefixLength = this.bot.config.prefix.length;
-            const newSplit = message.content.substr(prefixLength).trim().split(/ +/);
-
-            cmdDetails.type = 'prefix';
-            cmdDetails.base = newSplit[0];
-            cmdDetails.args = newSplit.slice(1);
             return cmdDetails;
         }
 
@@ -117,6 +139,20 @@ class CommandHandler {
 
         if (!(command.config.botPermissions instanceof Array)) {
             command.config.botPermissions = [];
+        }
+
+        if (!(command.config.defaultPermissions instanceof Array)) {
+            command.config.defaultPermissions = [];
+        }
+
+        for (const permission of command.config.defaultPermissions) {
+            if (!(permission in EXTENDED_FLAGS)) {
+                return `Improper Default Permission ${permission} in ${command.id}`;
+            }
+        }
+
+        if (!(command.usage instanceof Map)) {
+            command.usage = new Map();
         }
 
         if (this.getCommand(command.config.cmd)) {

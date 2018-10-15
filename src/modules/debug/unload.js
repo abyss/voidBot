@@ -1,9 +1,19 @@
+const { send } = require('../../includes/helpers');
+
 exports.run = async (msg, args) => {
-    if (!(args.length > 0)) { throw 'Have to pass at least one argument'; }
+    if (!(args.length > 0)) {
+        // TODO: Update this once return false prints usage instructions
+        send(msg.channel, 'Have to pass at least one argument');
+        return false;
+    }
 
     await this.mod.bot.commandHandler.unloadCommand(args.join(' '));
-    msg.channel.send(':ok_hand:');
+    await send(msg.channel, ':ok_hand:');
+
+    return true;
 };
+
+exports.usage = new Map();
 
 exports.config = {
     name: 'Unload Command',

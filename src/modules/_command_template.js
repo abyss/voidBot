@@ -1,7 +1,15 @@
+const { send } = require('../../includes/helpers');
+
 exports.run = async (msg, args) => {
     // Code to run whenever this command is called goes here!
     // Command also has access to (injected) this.mod, and this.cmdId
+
+    // return false is considered a failure and will respond with usage instructions
+    return true;
 };
+
+// Usage is a Map where each key is the usage, and the value is the description
+exports.usage = new Map();
 
 exports.config = {
     name: 'Name of the Command',
