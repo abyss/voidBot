@@ -1,9 +1,11 @@
 const chalk = require('chalk');
 
 class LoggingHandler {
-    constructor(bot) {
-        this.bot = bot;
-        this.injectLogger();
+    constructor(bot = null) {
+        if (bot) {
+            this.bot = bot;
+            this.injectLogger();
+        }
     }
 
     injectLogger() {

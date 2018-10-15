@@ -1,9 +1,22 @@
 const Fuse = require('fuse.js');
+const log = new require('./logging-handler');
 
 exports.send = async function (channel, msg) {
     channel.send(msg).catch(error => {
-        this.mod.bot.error(`There was an error posting msg: ${error}`);
+        log.error(`There was an error posting msg: ${error}`);
     });
+};
+
+exports.hexColor = function (hex) {
+    if (!(typeof hex === 'number')) {
+        return parseInt(hex, 16);
+    } else {
+        return hex;
+    }
+};
+
+exports.rgbColor = function (red, green, blue) {
+    return (red << 16) + (green << 8) + blue;
 };
 
 exports.findExactRole = function (guild, roleText) {

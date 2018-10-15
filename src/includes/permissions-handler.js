@@ -9,12 +9,11 @@ class PermissionsHandler {
         let position = -1;
         let state = '';
 
-        for (const roleCollection of member.roles) {
-            let role = roleCollection[1]; // roleCollection is a Collection with 2 values, ID and Object
+        for (const [id, role] of member.roles) {
             // highest position gets priority, in all non-undefined cases
             if (role.calculatedPosition > position) {
                 // have to pass command.id in brackets because of periods
-                let newState = await this.bot.db.get(guild.id, `permissions['${command.id}'].groups.${role.id}`);
+                let newState = await this.bot.db.get(guild.id, `permissions['${command.id}'].groups.${id}`);
                 if (newState) {
                     position = role.calculatedPosition;
                     state = newState;

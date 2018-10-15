@@ -2,6 +2,8 @@ const Module = require('../../includes/module-class');
 
 // Make sure you change the name here
 module.exports = class ModuleNameModule extends Module {
+    // Module commands go here
+
     get config() {
         return {
             name: 'Name of the Module',
