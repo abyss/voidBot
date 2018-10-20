@@ -11,7 +11,7 @@ exports.usage = new Map();
 exports.config = {
     name: 'Ping',
     cmd: 'ping',
-    alias: ['p'],
+    alias: [],
     botPermissions: [], // Permissions needed by the bot to use this command.
     defaultPermissions: [], // Default permissions to use this command by user
     location: 'ALL', // 'GUILD_ONLY', 'DM_ONLY', 'ALL'

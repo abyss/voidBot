@@ -2,13 +2,12 @@ const { send } = require('../../includes/helpers');
 
 exports.run = async (msg, args) => {
     if (!(args.length > 0)) {
-        // TODO: Update this once return false prints usage instructions
-        send(msg.channel, 'Have to pass at least one argument');
+        send(msg.channel, 'Unknown options');
         return false;
     }
 
-    await this.mod.bot.commandHandler.unloadCommand(args.join(' '));
-    await this.mod.bot.commandHandler.loadCommand(args.join(' '));
+    await this.mod.bot.cmdHandler.unloadCommand(args.join(' '));
+    await this.mod.bot.cmdHandler.loadCommand(args.join(' '));
     send(msg.channel, ':ok_hand:');
 
     return true;
@@ -23,6 +22,6 @@ exports.config = {
     botPermissions: [], // Permissions needed by the bot to use this command.
     defaultPermissions: [], // Default permissions to use this command by user
     location: 'ALL', // 'GUILD_ONLY', 'DM_ONLY', 'ALL'
-    description: 'Reload a command by name',
+    description: 'Reload a command by id',
     debug: true // This makes it unusable to anyone besides process.env.OWNER
 };

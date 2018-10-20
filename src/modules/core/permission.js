@@ -16,12 +16,12 @@ exports.run = async (msg, args) => {
         'maybe': 'default',
     };
 
+    // TODO: verify command before passing to basemod?
     let command = args[0];
     let role = args[1];
     let state = allowedStates[args[2]];
 
     if (!state) {
-        // TODO: Update this once return false prints usage instructions
         send(msg.channel, 'State must be "allow", "deny", or "default"');
         return false;
     }
@@ -48,5 +48,5 @@ exports.config = {
     defaultPermissions: ['MANAGE_GUILD'], // Default permissions to use this command by user
     location: 'GUILD_ONLY', // 'GUILD_ONLY', 'DM_ONLY', 'ALL'
     description: 'Change permissions for commands',
-    debug: true // If true: unusable to anyone besides process.env.OWNER
+    debug: false // If true: unusable to anyone besides process.env.OWNER
 };

@@ -1,6 +1,6 @@
 {
   "name": "voidbot",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "main": "src/bot.js",
   "author": "abyss@voidinput.com",
   "license": "MIT",

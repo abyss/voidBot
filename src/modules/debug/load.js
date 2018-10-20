@@ -2,12 +2,11 @@ const { send } = require('../../includes/helpers');
 
 exports.run = async (msg, args) => {
     if (!(args.length > 0)) {
-        // TODO: Update this once return false prints usage instructions
-        send(msg.channel, 'Have to pass at least one argument');
+        send(msg.channel, 'Unknown options');
         return false;
     }
 
-    await this.mod.bot.commandHandler.loadCommand(args.join(' '));
+    await this.mod.bot.cmdHandler.loadCommand(args.join(' '));
     await send(msg.channel, ':ok_hand:');
 
     return true;

@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
 const PermissionsHandler = require('./permissions-handler');
-const { send, EXTENDED_FLAGS } = require('./helpers');
+const { send, EXTENDED_FLAGS, userColor } = require('./helpers');
 
 class CommandHandler {
     constructor(bot) {
@@ -16,12 +16,31 @@ class CommandHandler {
     }
 
     async getGuildPrefix(guild) {
+        if (!guild) { return ''; }
+
         const prefix = await this.bot.db.get(guild.id, 'prefix');
         if (prefix) {
             return prefix;
         }
 
         return this.bot.config.prefix;
+    }
+
+    validLocation(message, command) {
+        const type = message.channel.type;
+        const loc = command.config.location;
+
+        if (loc === 'ALL') { return true; }
+
+        if (type === 'text' && loc === 'GUILD_ONLY') {
+            return true;
+        }
+
+        if (type === 'dm' && loc === 'DM_ONLY') {
+            return true;
+        }
+
+        return false;
     }
 
     async onMessage(message) {
@@ -33,33 +52,28 @@ class CommandHandler {
         const command = this.getCommand(processedCommand.base);
         if (!command) { return; }
 
-        if (command.config.location === 'NONE') { return; }
-
-        if (command.config.location === 'DM_ONLY' &&
-            !(message.channel.type === 'dm')) { return; }
-
-        if (command.config.location === 'GUILD_ONLY' &&
-            !(message.channel.type === 'text')) { return; }
-
-        if (command.config.debug || command.mod.config.debug) {
-            if (!this.bot.config.isOwner(message.author)) { return; }
-        }
+        if (!this.validLocation(message, command)) { return; }
 
         if (message.channel.type === 'text') {
-            if (!await this.permissions.hasCommandPermissions(message.guild, message.member, command)) { return; }
+            if (!await this.permissions.hasPermission(message.guild, message.member, command)) {
+                return;
+            }
         }
 
-        const runSuccessfully = await command.run(message, processedCommand.args).catch(error => {
-            send(message.channel, `**:interrobang:  |  An error has occured:** ${error}`);
-            this.bot.error(`Command error in ${command.id}: ${error}`);
-        });
+        const runSuccessfully = await command
+            .run(message, processedCommand.args)
+            .catch(error => {
+                send(message.channel, `**:interrobang:  |  An error has occured:** ${error}`);
+                this.bot.error(`Command error in ${command.id}: ${error}`);
+            });
 
-        // Only if false, not if undefined
+        // Only print help if command returns explicit false, not undefined.
         if (runSuccessfully === false) {
-            // TODO: print usage instructions from helper function
+            this.sendCommandHelp(message.channel, command);
         }
     }
 
+    // MAYBE: Remove type from processMessage, return undefined when not proper command.
     async processMessage(message) {
         const cmdDetails = {
             type: 'invalid',
@@ -195,7 +209,7 @@ class CommandHandler {
         const modId = split[0];
         const cmdId = split[1];
 
-        const mod = this.bot.moduleHandler.getModule(modId);
+        const mod = this.bot.modHandler.getModule(modId);
 
         if (!mod) {
             throw `No module ${modId} found.`;
@@ -279,6 +293,43 @@ class CommandHandler {
                 this.bot.error(`${error}`);
             }
         });
+    }
+
+    async sendCommandHelp(channel, command) {
+        const color = userColor(this.bot.user.id, channel.guild);
+        const prefix = await this.getGuildPrefix(channel.guild);
+        const embedFields = [];
+
+        let description;
+
+        if (command.usage.size === 0) {
+            description = '';
+            embedFields.push({
+                name: `${prefix}${command.config.cmd}`,
+                value: command.config.description
+            });
+        } else {
+            description = command.config.description;
+            command.usage.forEach((value, key) => {
+                embedFields.push({
+                    name: `${prefix}${command.config.cmd} ${key}`,
+                    value: value
+                });
+            });
+        }
+
+        const embed = {
+            color: color,
+            title: command.config.name,
+            description: description,
+            fields: embedFields,
+            footer: {
+                icon_url: this.bot.user.avatarURL,
+                text: 'voidBot Help Command'
+            }
+        };
+
+        send(channel, { 'embed': embed });
     }
 
 }

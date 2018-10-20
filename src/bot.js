@@ -9,10 +9,10 @@ const ModuleHandler = require('./includes/module-handler');
 const LowDBHandler = require('./includes/lowdb-handler');
 
 const bot = new discordjs.Client();
-bot.loggingHandler = new LoggingHandler(bot);
+bot.logHandler = new LoggingHandler(bot);
 bot.config = new ConfigHandler(bot);
-bot.commandHandler = new CommandHandler(bot);
-bot.moduleHandler = new ModuleHandler(bot);
+bot.cmdHandler = new CommandHandler(bot);
+bot.modHandler = new ModuleHandler(bot);
 bot.db = new LowDBHandler(bot, path.resolve(__dirname, '../data'));
 
 //TODO: Proper Error Handler for the bot
@@ -31,8 +31,8 @@ bot.on('ready', () => {
     bot.log(`Channels: ${bot.channels.size}`);
     bot.log(`Guilds: ${bot.guilds.size}`);
 
-    bot.commandHandler.init();
-    bot.moduleHandler.init();
+    bot.cmdHandler.init();
+    bot.modHandler.init();
 
     bot.log('Bot loaded!');
 
@@ -44,15 +44,18 @@ bot.on('ready', () => {
 bot.on('message', message => {
     // TODO: Module Message Handling
     if (message.author.bot) { return; }
-    bot.commandHandler.onMessage(message);
+    bot.cmdHandler.onMessage(message);
 });
+
+bot.on('error', console.error);
+// TODO: Handle ErrorEvent ECONNRESET gracefully without log when not debug
 
 process.on('unhandledRejection', err => {
     console.error(`unhandledRejection: \n${err}`);
 });
 
 process.on('uncaughtException', (err) => {
-    const errorMsg = (err.stack || err || '').toString().replace(new RegExp(`${__dirname}/`, 'g'), './');
+    const errorMsg = (err.stack || err || '').toString().replace(new RegExp(`${__dirname}${path.sep}`, 'g'), './');
     console.error(`uncaughtException: \n${errorMsg}`);
 });
 

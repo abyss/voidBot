@@ -9,7 +9,7 @@ class Module {
 
         this.moduleFolder = path.resolve(moduleDir);
 
-        this.bot.commandHandler.loadModCommands(this);
+        this.bot.cmdHandler.loadModCommands(this);
     }
 
     get config() {

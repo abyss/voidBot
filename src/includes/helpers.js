@@ -6,6 +6,14 @@ const { FLAGS } = require('discord.js').Permissions;
 
 // TODO: alwaysId() - if not already an id, get object's id.
 
+exports.expectId = function (obj) {
+    if (typeof obj === 'object') {
+        return obj.id;
+    } else {
+        return obj;
+    }
+};
+
 exports.send = async function (channel, msg) {
     channel.send(msg).catch(error => {
         log.error(`There was an error posting msg: ${error}`);
@@ -22,6 +30,18 @@ exports.hexColor = function (hex) {
 
 exports.rgbColor = function (red, green, blue) {
     return (red << 16) + (green << 8) + blue;
+};
+
+exports.userColor = function (userId, guild) {
+    if (typeof userId === 'object') {
+        userId = userId.id;
+    }
+
+    if (guild) {
+        return guild.members.get(userId).displayColor;
+    } else {
+        return resolveColor('C27C0E');
+    }
 };
 
 exports.resolveColor = resolveColor;

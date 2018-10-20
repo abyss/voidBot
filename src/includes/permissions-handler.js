@@ -5,9 +5,13 @@ class PermissionsHandler {
         this.bot = bot;
     }
 
-    async hasCommandPermissions(guild, member, command) {
+    async hasPermission(guild, member, command) {
         let position = -1;
         let state = '';
+
+        if (command.config.debug || command.mod.config.debug) {
+            if (!this.bot.config.isOwner(member)) { return false; }
+        }
 
         for (const [id, role] of member.roles) {
             // highest position gets priority, in all non-undefined cases
