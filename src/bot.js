@@ -34,6 +34,7 @@ bot.on('ready', () => {
     bot.cmdHandler.init();
     bot.modHandler.init();
 
+    bot.user.setPresence({ game: { name: 'voidBot | use %help' }, status: 'online' });
     bot.log('Bot loaded!');
 
     bot.generateInvite(bot.config.permissions).then((invite_link) => {
@@ -46,15 +47,19 @@ bot.on('message', message => {
     bot.cmdHandler.onMessage(message);
 });
 
-bot.on('error', console.error);
 // TODO: Handle ErrorEvent ECONNRESET gracefully without log when not debug
+bot.on('error', err => {
+    const errorMsg = (err.stack || err.error || err || '').toString();
+    console.error(`unhandledRejection: \n${errorMsg}`);
+});
 
 process.on('unhandledRejection', err => {
-    console.error(`unhandledRejection: \n${err}`);
+    const errorMsg = (err.stack || err || '').toString();
+    console.error(`unhandledRejection: \n${errorMsg}`);
 });
 
 process.on('uncaughtException', (err) => {
-    const errorMsg = (err.stack || err || '').toString().replace(new RegExp(`${__dirname}${path.sep}`, 'g'), './');
+    const errorMsg = (err.stack || err || '').toString();
     console.error(`uncaughtException: \n${errorMsg}`);
 });
 

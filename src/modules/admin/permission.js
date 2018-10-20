@@ -13,6 +13,8 @@ exports.run = async (msg, args) => {
         'yes': 'allow',
         'no': 'deny',
         'maybe': 'default',
+        'enable': 'allow',
+        'disable': 'deny',
     };
 
     // TODO: verify command before passing to basemod?

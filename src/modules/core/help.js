@@ -1,4 +1,5 @@
 const { send, userColor } = require('../../includes/helpers');
+const { stripIndents } = require('common-tags');
 
 exports.run = async (msg, args) => {
     if (args.length === 0) {
@@ -31,9 +32,9 @@ exports.run = async (msg, args) => {
 
         for (const modName of Object.keys(commandStructure).sort()) {
             modSection.push(
-                `__**${modName}**__ **-** *${descriptions[modName]}*
+                stripIndents`
+                __**${modName}**__ **-** *${descriptions[modName]}*
                 \`${commandStructure[modName].sort().join('`, `')}\``
-                    .replace(/ +/g, ' ') // Strip extra spaces for mobile
             );
         }
 
@@ -44,11 +45,11 @@ exports.run = async (msg, args) => {
             color: color,
             title: 'Command List',
             description:
-                `*Get more information on any command with* \
-                \`${prefix}${this.config.cmd} <command>\`
+                stripIndents`
+                *Get more information on any command with* \`${prefix}${this.config.cmd} <command>\`
+                *You can also replace any prefix with tagging the bot!*
 
-                ${modSection.join('\n\n')}`
-                    .replace(/ +/g, ' '), // Strip extra spaces for mobile
+                ${modSection.join('\n\n')}`,
             footer: {
                 icon_url: this.mod.bot.user.avatarURL,
                 text: 'voidBot Help Command'
