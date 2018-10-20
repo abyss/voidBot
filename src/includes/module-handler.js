@@ -9,11 +9,10 @@ class ModuleHandler {
         this.modulesFolder = path.resolve(__dirname, '../modules');
 
         this.loadAllModules();
-        //TODO: Run preInit() on all loaded modules?
     }
 
     init() {
-        //TODO: Run init() on all loaded modules?
+        this.runAll('init');
     }
 
     getModule(modId) {
@@ -63,7 +62,7 @@ class ModuleHandler {
         });
     }
 
-    runAll(methodName, params) {
+    runAll(methodName, params = []) {
         if (!(params instanceof Array)) {
             params = [params];
         }

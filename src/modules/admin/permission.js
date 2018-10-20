@@ -2,8 +2,7 @@ const { send } = require('../../includes/helpers');
 
 exports.run = async (msg, args) => {
     if (!(args.length === 3)) {
-        // TODO: Update this once return false prints usage instructions
-        send(msg.channel, 'Have to pass three arguments');
+        send(msg.channel, 'Unknown options');
         return false;
     }
 

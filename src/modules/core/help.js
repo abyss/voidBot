@@ -3,6 +3,7 @@ const { send, userColor } = require('../../includes/helpers');
 exports.run = async (msg, args) => {
     if (args.length === 0) {
         const commandStructure = {};
+        const descriptions = {};
 
         const type = msg.channel.type;
         for (const command of this.mod.bot.cmdHandler.commands) {
@@ -20,6 +21,7 @@ exports.run = async (msg, args) => {
 
             if (!commandStructure[modName]) {
                 commandStructure[modName] = [];
+                descriptions[modName] = command.mod.config.description;
             }
 
             commandStructure[modName].push(command.config.cmd);
@@ -29,8 +31,9 @@ exports.run = async (msg, args) => {
 
         for (const modName of Object.keys(commandStructure).sort()) {
             modSection.push(
-                `__**${modName}**__
+                `__**${modName}**__ **-** *${descriptions[modName]}*
                 \`${commandStructure[modName].sort().join('`, `')}\``
+                    .replace(/ +/g, ' ') // Strip extra spaces for mobile
             );
         }
 
@@ -44,7 +47,8 @@ exports.run = async (msg, args) => {
                 `*Get more information on any command with* \
                 \`${prefix}${this.config.cmd} <command>\`
 
-                ${modSection.join('\n\n')}`,
+                ${modSection.join('\n\n')}`
+                    .replace(/ +/g, ' '), // Strip extra spaces for mobile
             footer: {
                 icon_url: this.mod.bot.user.avatarURL,
                 text: 'voidBot Help Command'

@@ -20,9 +20,6 @@ class Module {
         };
     }
 
-    // Called when bot loads, before login to Discord. One-time setup methods.
-    preInit() { }
-
     // Called when bot logs into Discord. Keep in mind, this may be called multiple times.
     init() { }
 

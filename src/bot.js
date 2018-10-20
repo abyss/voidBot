@@ -42,7 +42,6 @@ bot.on('ready', () => {
 });
 
 bot.on('message', message => {
-    // TODO: Module Message Handling
     if (message.author.bot) { return; }
     bot.cmdHandler.onMessage(message);
 });
