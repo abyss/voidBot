@@ -9,17 +9,17 @@
     "lint": "npx eslint \"src/**\""
   },
   "dependencies": {
-    "chalk": "^2.4.1",
+    "chalk": "^2.4.2",
     "common-tags": "^1.8.0",
-    "discord.js": "^11.4.2",
-    "dotenv": "^5.0.0",
-    "fuse.js": "^3.2.1",
+    "discord.js": "^11.5.1",
+    "dotenv": "^8.0.0",
+    "fuse.js": "^3.4.5",
     "lodash": "^4.17.11",
     "lowdb": "^1.0.0",
-    "moment": "^2.22.2",
-    "moment-duration-format": "^2.2.2"
+    "moment": "^2.24.0",
+    "moment-duration-format": "^2.3.0"
   },
   "devDependencies": {
-    "eslint": "^5.6.1"
+    "eslint": "^5.16.0"
   }
 }
