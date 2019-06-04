@@ -1,6 +1,7 @@
 const discordjs = require('discord.js');
 const chalk = require('chalk');
 const path = require('path');
+const fs = require('fs');
 
 const LoggingHandler = require('./includes/logging-handler');
 const ConfigHandler = require('./includes/config-handler');
@@ -13,7 +14,12 @@ bot.logHandler = new LoggingHandler(bot);
 bot.config = new ConfigHandler(bot);
 bot.cmdHandler = new CommandHandler(bot);
 bot.modHandler = new ModuleHandler(bot);
-bot.db = new LowDBHandler(bot, path.resolve(__dirname, '../data'));
+
+const dataFolder = path.resolve(__dirname, '../data');
+if (!fs.existsSync(dataFolder)) {
+    fs.mkdirSync(dataFolder);
+}
+bot.db = new LowDBHandler(bot, dataFolder);
 
 //TODO: Proper Error Handler for the bot
 
