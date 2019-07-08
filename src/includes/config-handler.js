@@ -1,8 +1,7 @@
-require('dotenv').config();
+const logger = require('./logger');
 
 class ConfigHandler {
-    constructor(bot) {
-        this.bot = bot;
+    constructor() {
         this.owners = this.parseOwners();
         this.prefix = process.env.DEFAULTPREFIX || '/';
         this.debug = this.parseDebug();
@@ -14,7 +13,7 @@ class ConfigHandler {
 
     validateToken() {
         if (!process.env.TOKEN || !/^[A-Za-z0-9._-]+$/.test(process.env.TOKEN)) {
-            this.bot.error('Environment variable TOKEN is missing or incorrect.');
+            logger.error('Environment variable TOKEN is missing or incorrect.');
             process.exit(1);
         }
     }

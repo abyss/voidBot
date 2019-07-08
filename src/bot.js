@@ -2,11 +2,9 @@ const chalk = require('chalk');
 
 const bot = require('./startup/discord');
 require('./startup/logger')(bot);
+bot.config = require('./startup/config')();
 bot.db = require('./startup/database')(bot);
 require('./startup/commands')(bot);
-
-const ConfigHandler = require('./includes/config-handler');
-bot.config = new ConfigHandler(bot);
 
 bot.on('ready', () => {
     bot.log('Stats:');
