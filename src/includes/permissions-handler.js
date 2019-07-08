@@ -1,5 +1,3 @@
-// const _ = require('lodash');
-
 class PermissionsHandler {
     constructor(bot) {
         this.bot = bot;

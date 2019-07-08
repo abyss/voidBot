@@ -1,25 +1,12 @@
-const discordjs = require('discord.js');
 const chalk = require('chalk');
-const path = require('path');
-const fs = require('fs');
 
-const LoggingHandler = require('./includes/logging-handler');
+const bot = require('./startup/discord');
+require('./startup/logger')(bot);
+bot.db = require('./startup/database')(bot);
+require('./startup/commands')(bot);
+
 const ConfigHandler = require('./includes/config-handler');
-const CommandHandler = require('./includes/command-handler');
-const ModuleHandler = require('./includes/module-handler');
-const LowDBHandler = require('./includes/lowdb-handler');
-
-const bot = new discordjs.Client();
-bot.logHandler = new LoggingHandler(bot);
 bot.config = new ConfigHandler(bot);
-bot.cmdHandler = new CommandHandler(bot);
-bot.modHandler = new ModuleHandler(bot);
-
-const dataFolder = path.resolve(__dirname, '../data');
-if (!fs.existsSync(dataFolder)) {
-    fs.mkdirSync(dataFolder);
-}
-bot.db = new LowDBHandler(bot, dataFolder);
 
 bot.on('ready', () => {
     bot.log('Stats:');
@@ -50,3 +37,4 @@ bot.on('error', err => {
     bot.error(`discord.js Error: \n${errorMsg}`);
 });
 
+module.exports = bot;

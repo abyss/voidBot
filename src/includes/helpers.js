@@ -1,6 +1,5 @@
 const Fuse = require('fuse.js');
-const LoggingHandler = require('./logging-handler');
-const log = new LoggingHandler();
+const logger = require('./logger');
 const { resolveColor } = require('discord.js/src/client/ClientDataResolver');
 const { FLAGS } = require('discord.js').Permissions;
 
@@ -16,7 +15,7 @@ exports.expectId = function (obj) {
 
 exports.send = async function (channel, msg) {
     channel.send(msg).catch(error => {
-        log.error(`There was an error posting msg: ${error}`);
+        logger.error(`There was an error posting msg: ${error}`);
     });
 };
 
