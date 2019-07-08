@@ -4,7 +4,7 @@ class ConfigHandler {
     constructor() {
         this.owners = this.parseOwners();
         this.prefix = process.env.DEFAULTPREFIX || '/';
-        this.debug = this.parseDebug();
+        this.debug = this.parseBoolean(process.env.DEBUG);
         this.version = process.env.npm_package_version;
         this._permissions = new Set(['SEND_MESSAGES', 'READ_MESSAGES']);
 
@@ -36,15 +36,15 @@ class ConfigHandler {
         return this.owners.includes(id);
     }
 
-    parseDebug() {
-        let debug = process.env.DEBUG;
+    parseBoolean(input) {
+        if (typeof input === 'string') {
+            input = input.toLowerCase();
+            if (input === 'true') { return true; }
+            if (input === '1') { return true; }
+            if (input === 'yes') { return true; }
+        }
 
-        if (typeof debug === 'undefined') { return false; }
-        debug = debug.toLowerCase();
-        if (debug === 'true') { return true; }
-        if (debug === '1') { return true; }
-        if (debug === 'yes') { return true; }
-
+        if (input) return true;
         return false;
     }
 
