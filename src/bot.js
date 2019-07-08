@@ -21,15 +21,6 @@ if (!fs.existsSync(dataFolder)) {
 }
 bot.db = new LowDBHandler(bot, dataFolder);
 
-//TODO: Proper Error Handler for the bot
-
-function setTitle(title) {
-    process.title = title;
-    process.stdout.write(`\u001B]0;${title}\u0007`);
-}
-
-setTitle(`voidBot ${bot.config.version}`);
-
 bot.on('ready', () => {
     bot.log('Stats:');
     bot.log(`User: ${bot.user.tag} <ID: ${bot.user.id}>`);
@@ -56,17 +47,6 @@ bot.on('message', message => {
 // TODO: Handle ErrorEvent ECONNRESET gracefully without log when not debug
 bot.on('error', err => {
     const errorMsg = (err.stack || err.error || err || '').toString();
-    console.error(`unhandledRejection: \n${errorMsg}`);
+    bot.error(`discord.js Error: \n${errorMsg}`);
 });
 
-process.on('unhandledRejection', err => {
-    const errorMsg = (err.stack || err || '').toString();
-    console.error(`unhandledRejection: \n${errorMsg}`);
-});
-
-process.on('uncaughtException', (err) => {
-    const errorMsg = (err.stack || err || '').toString();
-    console.error(`uncaughtException: \n${errorMsg}`);
-});
-
-bot.login(process.env.TOKEN).catch(console.error);
