@@ -1,7 +1,7 @@
 const Module = require('../../includes/module-class');
 const { findRole } = require('../../includes/helpers');
 
-module.exports = class BaseModule extends Module {
+module.exports = class AdminModule extends Module {
     get config() {
         return {
             name: 'Administration',
@@ -38,11 +38,11 @@ module.exports = class BaseModule extends Module {
             throw `Role ${roleText} not found.`;
         }
 
-        this.bot.handlers.commands.permissions.setCommandPermission(guild.id, command.id, role.id, state);
+        return this.bot.handlers.permissions.setCommandPermission(guild.id, command.id, role.id, state);
     }
 
     async setGuildPrefix(guild, prefix) {
-        this.bot.db.set(guild.id, 'prefix', prefix);
+        return this.bot.db.set(guild.id, 'prefix', prefix);
     }
 
     async getGuildPrefix(guild) {
@@ -50,7 +50,7 @@ module.exports = class BaseModule extends Module {
     }
 
     async hasPermission(guild, member, command) {
-        return this.bot.handlers.commands.permissions.hasPermission(guild, member, command);
+        return this.bot.handlers.permissions.hasPermission(guild, member, command);
     }
 
 };

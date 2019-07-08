@@ -1,14 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
-const PermissionsHandler = require('./permissions-handler');
 const { send, EXTENDED_FLAGS, userColor } = require('./helpers');
 
 class CommandHandler {
     constructor(bot) {
         this.bot = bot;
         this.commands = [];
-        this.permissions = new PermissionsHandler(bot);
     }
 
     init() {
@@ -55,7 +53,7 @@ class CommandHandler {
         if (!this.validLocation(message, command)) { return; }
 
         if (message.channel.type === 'text') {
-            if (!await this.permissions.hasPermission(message.guild, message.member, command)) {
+            if (!await this.bot.handlers.permissions.hasPermission(message.guild, message.member, command)) {
                 return;
             }
         }

@@ -1,6 +1,6 @@
 const Module = require('../../includes/module-class');
 
-module.exports = class BaseModule extends Module {
+module.exports = class CoreModule extends Module {
     get config() {
         return {
             name: 'Core',
