@@ -7,8 +7,8 @@ exports.run = async (msg, args) => {
         const descriptions = {};
 
         const type = msg.channel.type;
-        for (const command of this.mod.bot.cmdHandler.commands) {
-            if (!this.mod.bot.cmdHandler.validLocation(msg, command)) {
+        for (const command of this.mod.bot.handlers.commands.commands) {
+            if (!this.mod.bot.handlers.commands.validLocation(msg, command)) {
                 continue;
             }
 
@@ -39,7 +39,7 @@ exports.run = async (msg, args) => {
         }
 
         const color = userColor(this.mod.bot.user.id, msg.guild);
-        const prefix = await this.mod.bot.cmdHandler.getGuildPrefix(msg.guild);
+        const prefix = await this.mod.bot.handlers.commands.getGuildPrefix(msg.guild);
 
         const embed = {
             color: color,
@@ -67,7 +67,7 @@ exports.run = async (msg, args) => {
 
     if (args.length === 1) {
         const cmdText = args[0];
-        const command = this.mod.bot.cmdHandler.getCommand(cmdText);
+        const command = this.mod.bot.handlers.commands.getCommand(cmdText);
         let found = false;
 
         // Check each step of the way, if any fail, flag as "can't find."
@@ -76,7 +76,7 @@ exports.run = async (msg, args) => {
         }
 
         // only check location if it was found
-        if (found && !this.mod.bot.cmdHandler.validLocation(msg, command)) {
+        if (found && !this.mod.bot.handlers.commands.validLocation(msg, command)) {
             found = false; // this command doesn't exist for this user
         }
 
@@ -90,7 +90,7 @@ exports.run = async (msg, args) => {
             send(msg.channel, `Cannot find command: \`${cmdText}\`.`);
             return false;
         } else {
-            this.mod.bot.cmdHandler.sendCommandHelp(msg.channel, command);
+            this.mod.bot.handlers.commands.sendCommandHelp(msg.channel, command);
             return true;
         }
     }

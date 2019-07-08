@@ -17,7 +17,7 @@ module.exports = class BaseModule extends Module {
     }
 
     async changePermissions(guild, cmdText, roleText, state) {
-        let command = this.bot.cmdHandler.getCommand(cmdText);
+        let command = this.bot.handlers.commands.getCommand(cmdText);
 
         if (!guild.available) {
             this.bot.error(`Guild: ${guild} not available.`);
@@ -38,7 +38,7 @@ module.exports = class BaseModule extends Module {
             throw `Role ${roleText} not found.`;
         }
 
-        this.bot.cmdHandler.permissions.setCommandPermission(guild.id, command.id, role.id, state);
+        this.bot.handlers.commands.permissions.setCommandPermission(guild.id, command.id, role.id, state);
     }
 
     async setGuildPrefix(guild, prefix) {
@@ -46,11 +46,11 @@ module.exports = class BaseModule extends Module {
     }
 
     async getGuildPrefix(guild) {
-        return this.bot.cmdHandler.getGuildPrefix(guild);
+        return this.bot.handlers.commands.getGuildPrefix(guild);
     }
 
     async hasPermission(guild, member, command) {
-        return this.bot.cmdHandler.permissions.hasPermission(guild, member, command);
+        return this.bot.handlers.commands.permissions.hasPermission(guild, member, command);
     }
 
 };

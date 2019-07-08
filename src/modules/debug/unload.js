@@ -6,7 +6,7 @@ exports.run = async (msg, args) => {
         return false;
     }
 
-    await this.mod.bot.cmdHandler.unloadCommand(args.join(' '));
+    await this.mod.bot.handlers.commands.unloadCommand(args.join(' '));
     await send(msg.channel, ':ok_hand:');
 
     return true;

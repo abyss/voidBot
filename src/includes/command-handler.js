@@ -209,7 +209,7 @@ class CommandHandler {
         const modId = split[0];
         const cmdId = split[1];
 
-        const mod = this.bot.modHandler.getModule(modId);
+        const mod = this.bot.handlers.mods.getModule(modId);
 
         if (!mod) {
             throw `No module ${modId} found.`;

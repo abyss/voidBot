@@ -1,6 +1,7 @@
 const chalk = require('chalk');
 
 const bot = require('./startup/discord');
+bot.handlers = {};
 require('./startup/logger')(bot);
 bot.config = require('./startup/config')();
 bot.db = require('./startup/database')(bot);
@@ -13,8 +14,8 @@ bot.on('ready', () => {
     bot.log(`Channels: ${bot.channels.size}`);
     bot.log(`Guilds: ${bot.guilds.size}`);
 
-    bot.cmdHandler.init();
-    bot.modHandler.init();
+    bot.handlers.commands.init();
+    bot.handlers.mods.init();
 
     bot.user.setPresence({ game: { name: 'voidBot | use %help' }, status: 'online' });
     bot.log('Bot loaded!');
@@ -26,7 +27,7 @@ bot.on('ready', () => {
 
 bot.on('message', message => {
     if (message.author.bot) { return; }
-    bot.cmdHandler.onMessage(message);
+    bot.handlers.commands.onMessage(message);
 });
 
 // TODO: Handle ErrorEvent ECONNRESET gracefully without log when not debug

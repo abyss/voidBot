@@ -10,6 +10,6 @@ module.exports = class BaseModule extends Module {
     }
 
     async hasPermission(guild, member, command) {
-        return this.bot.cmdHandler.permissions.hasPermission(guild, member, command);
+        return this.bot.handlers.commands.permissions.hasPermission(guild, member, command);
     }
 };
