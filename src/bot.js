@@ -10,9 +10,7 @@ require('./startup/commands')(bot); // Injects handlers into bot.handlers
 bot.on('ready', () => {
     bot.log('Stats:');
     bot.log(`User: ${bot.user.tag} <ID: ${bot.user.id}>`);
-    bot.log(`Users: ${bot.users.size}`);
-    bot.log(`Channels: ${bot.channels.size}`);
-    bot.log(`Guilds: ${bot.guilds.size}`);
+    bot.log(`Users: ${bot.users.size}, Guilds: ${bot.guilds.size}`);
 
     bot.handlers.commands.init();
     bot.handlers.mods.init();

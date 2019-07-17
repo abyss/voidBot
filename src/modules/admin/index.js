@@ -1,5 +1,5 @@
 const Module = require('../../includes/module-class');
-const { findRole } = require('../../includes/helpers');
+const { findRole, asyncForEach } = require('../../includes/helpers');
 
 module.exports = class AdminModule extends Module {
     get config() {
@@ -12,8 +12,30 @@ module.exports = class AdminModule extends Module {
 
     init() {
         this.bot.on('guildCreate', guild => {
-            this.bot.db.set(guild.id, 'name', guild.name);
+            this.serverStats(guild);
+            this.bot.log(`Joined new guild: ${guild.name} (${guild.id})`);
+            this.bot.log(`Users: ${this.bot.users.size}, Guilds: ${this.bot.guilds.size}`);
         });
+
+        this.allServerStats();
+        this.bot.setInterval(() => { this.allServerStats(); }, 1000 * 60 * 30); // Every 30 minutes
+    }
+
+    async allServerStats() {
+        asyncForEach(this.bot.guilds.array(), async (guild) => await this.serverStats(guild));
+    }
+
+    async serverStats(guild) {
+        const stats = {
+            id: guild.id,
+            name: guild.name,
+            owner: {
+                id: guild.id,
+                tag: guild.owner.user.tag
+            }
+        };
+
+        await this.bot.db.set(guild.id, 'serverStats', stats);
     }
 
     async changePermissions(guild, cmdText, roleText, state) {

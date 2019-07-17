@@ -5,6 +5,12 @@ const { FLAGS } = require('discord.js').Permissions;
 
 // TODO: alwaysId() - if not already an id, get object's id.
 
+exports.asyncForEach = async function asyncForEach(array, callback) {
+    for (let i = 0; i < array.length; i++) {
+        await callback(array[i], i, array);
+    }
+};
+
 exports.expectId = function (obj) {
     if (typeof obj === 'object') {
         return obj.id;
