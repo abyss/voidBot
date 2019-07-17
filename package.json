@@ -1,12 +1,12 @@
 {
   "name": "voidbot",
-  "version": "0.2.2",
+  "version": "0.2.9",
   "main": "src/bot.js",
   "author": "abyss@voidinput.com",
   "license": "MIT",
   "scripts": {
-    "start": "node .",
-    "lint": "npx eslint \"src/**\""
+    "start": "node src/index.js",
+    "lint": "eslint \"src/**\""
   },
   "dependencies": {
     "chalk": "^2.4.2",
@@ -14,10 +14,10 @@
     "discord.js": "^11.5.1",
     "dotenv": "^8.0.0",
     "fuse.js": "^3.4.5",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.14",
     "lowdb": "^1.0.0",
     "moment": "^2.24.0",
-    "moment-duration-format": "^2.3.0"
+    "moment-duration-format": "^2.3.2"
   },
   "devDependencies": {
     "eslint": "^5.16.0"

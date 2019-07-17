@@ -47,7 +47,7 @@ exports.run = async (msg, args) => {
             description:
                 stripIndents`
                 *Get more information on any command with* \`${prefix}${this.config.cmd} <command>\`
-                *You can also replace any prefix with tagging the bot!*
+                *You can tag the bot instead of using a prefix!*
 
                 ${modSection.join('\n\n')}`,
             footer: {
