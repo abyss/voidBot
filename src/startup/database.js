@@ -2,7 +2,7 @@ const LowDBHandler = require('../includes/lowdb-handler');
 const path = require('path');
 const fs = require('fs');
 
-module.exports = function init(bot) {
+module.exports = (bot) => {
     const dataFolder = path.resolve(__dirname, '../../data');
 
     if (!fs.existsSync(dataFolder)) {
