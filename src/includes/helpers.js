@@ -3,19 +3,32 @@ const logger = require('./logger');
 const { resolveColor } = require('discord.js/src/client/ClientDataResolver');
 const { FLAGS } = require('discord.js').Permissions;
 
-// TODO: alwaysId() - if not already an id, get object's id.
-
 exports.asyncForEach = async function asyncForEach(array, callback) {
     for (let i = 0; i < array.length; i++) {
         await callback(array[i], i, array);
     }
 };
 
-exports.expectId = function (obj) {
-    if (typeof obj === 'object') {
+exports.parseBoolean = function (input) {
+    if (typeof input === 'string') {
+        input = input.toLowerCase();
+        if (input === 'false') { return false; }
+        if (input === '0') { return false; }
+        if (input === 'no') { return false; }
+        if (input === 'off') { return false; }
+    }
+
+    if (input) return true;
+    else return false;
+};
+
+exports.getId = function (obj) {
+    if (typeof obj === 'string') {
+        return obj;
+    } else if (typeof obj.id === 'string') {
         return obj.id;
     } else {
-        return obj;
+        return '';
     }
 };
 

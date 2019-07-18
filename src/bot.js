@@ -2,7 +2,7 @@ const chalk = require('chalk');
 
 const bot = require('./startup/discord');
 bot.handlers = {};
-bot.config = require('./startup/config')();
+bot.config = require('./startup/config');
 require('./startup/logger')(bot, { debug: bot.config.debug }); // Injects bot.log, debug, error methods
 bot.db = require('./startup/database')(bot);
 require('./startup/commands')(bot); // Injects handlers into bot.handlers
