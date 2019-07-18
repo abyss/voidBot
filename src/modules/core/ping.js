@@ -1,7 +1,8 @@
 const { send } = require('../../includes/helpers');
+const bot = require('../../bot');
 
 exports.run = async (msg) => {
-    send(msg.channel, `:ping_pong:  **|  Pong!** (${Math.ceil(this.mod.bot.ping)}ms)`);
+    send(msg.channel, `:ping_pong:  **|  Pong!** (${Math.ceil(bot.ping)}ms)`);
 
     return true;
 };

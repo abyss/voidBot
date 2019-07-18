@@ -1,6 +1,8 @@
 const chalk = require('chalk');
 
 const bot = require('./startup/discord');
+module.exports = bot;
+
 bot.handlers = {};
 bot.config = require('./startup/config');
 require('./startup/logger')(bot, { debug: bot.config.debug }); // Injects bot.log, debug, error methods
@@ -33,5 +35,3 @@ bot.on('error', err => {
     const errorMsg = (err.stack || err.error || err || '').toString();
     bot.error(`discord.js Error: \n${errorMsg}`);
 });
-
-module.exports = bot;
