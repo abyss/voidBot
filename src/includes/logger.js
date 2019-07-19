@@ -14,21 +14,24 @@ function init(conf) {
     if (conf.log === false) config.log = false;
 }
 
-function debug(output) {
+function debug(...output) {
     if (config.debug === true) {
-        return console.log(`${chalk.yellow('[D]')} ${output}`);
+        for (let i = 0; i < output.length; i++)
+            console.log(`${chalk.yellow('[D]')} ${output[i]}`);
     }
 }
 
-function error(output) {
+function error(...output) {
     if (config.error === true) {
-        return console.error(`${chalk.red('[E]')} ${output}`);
+        for (let i = 0; i < output.length; i++)
+            console.error(`${chalk.red('[E]')} ${output[i]}`);
     }
 }
 
-function log(output) {
+function log(...output) {
     if (config.log === true) {
-        return console.log(`${chalk.blue('[-]')} ${output}`);
+        for (let i = 0; i < output.length; i++)
+            console.log(`${chalk.blue('[-]')} ${output[i]}`);
     }
 }
 
