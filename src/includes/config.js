@@ -1,4 +1,4 @@
-const { parseBoolean, getId } = require('./helpers');
+const { parseBoolean, resolveId } = require('./helpers');
 
 const owners = process.env.OWNER.split(',');
 
@@ -17,7 +17,7 @@ const registerPermission = (perm) => {
 
 const isOwner = (user) => {
     if (!user) return false;
-    const id = getId(user);
+    const id = resolveId(user);
     return owners.includes(id);
 };
 

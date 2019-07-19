@@ -22,7 +22,7 @@ exports.parseBoolean = function (input) {
     else return false;
 };
 
-exports.getId = function (obj) {
+exports.resolveId = function (obj) {
     if (typeof obj === 'string') {
         return obj;
     } else if (typeof obj.id === 'string') {

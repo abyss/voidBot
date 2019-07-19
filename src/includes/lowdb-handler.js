@@ -2,7 +2,7 @@ const low = require('lowdb');
 const FileAsync = require('lowdb/adapters/FileAsync');
 const DBInterface = require('./interfaces/db-interface');
 const path = require('path');
-const { getId } = require('./helpers');
+const { resolveId } = require('./helpers');
 
 class LowDBHandler extends DBInterface {
     constructor(bot, folder) {
@@ -20,7 +20,7 @@ class LowDBHandler extends DBInterface {
 
     async get(guild, key) {
         try {
-            guild = getId(guild);
+            guild = resolveId(guild);
             const db = await this.getDBHandle(guild);
             return await db.get(key).value();
         } catch (error) {
@@ -30,7 +30,7 @@ class LowDBHandler extends DBInterface {
 
     async set(guild, key, data) {
         try {
-            guild = getId(guild);
+            guild = resolveId(guild);
             const db = await this.getDBHandle(guild);
             await db.set(key, data).write();
         } catch (error) {
@@ -40,7 +40,7 @@ class LowDBHandler extends DBInterface {
 
     async delete(guild, key) {
         try {
-            guild = getId(guild);
+            guild = resolveId(guild);
             const db = await this.getDBHandle(guild);
             db.unset(key).write();
         } catch (error) {
