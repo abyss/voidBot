@@ -1,13 +1,13 @@
-const LowDBHandler = require('../includes/lowdb-handler');
+const database = require('../includes/database');
 const path = require('path');
 const fs = require('fs');
 
-module.exports = (bot) => {
-    const dataFolder = path.resolve(__dirname, '../../data');
+const dataFolder = path.resolve(__dirname, '../../data');
 
-    if (!fs.existsSync(dataFolder)) {
-        fs.mkdirSync(dataFolder);
-    }
+if (!fs.existsSync(dataFolder)) {
+    fs.mkdirSync(dataFolder);
+}
 
-    return new LowDBHandler(bot, dataFolder);
-};
+database.init(dataFolder);
+
+module.exports = database;

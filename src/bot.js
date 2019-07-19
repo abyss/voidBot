@@ -6,7 +6,7 @@ module.exports = bot;
 bot.handlers = {};
 bot.config = require('./startup/config');
 require('./startup/logger')(bot); // Injects bot.log, debug, error methods
-bot.db = require('./startup/database')(bot);
+bot.db = require('./startup/database');
 require('./startup/commands')(bot); // Injects handlers into bot.handlers
 
 bot.on('ready', () => {
