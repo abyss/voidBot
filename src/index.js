@@ -19,4 +19,12 @@ process.on('uncaughtException', (err) => {
     process.exit(1);
 });
 
+const gracefulExit = () => {
+    bot.destroy();
+    process.exit(0);
+};
+
+process.on('SIGINT', gracefulExit);
+process.on('SIGTERM', gracefulExit);
+
 bot.login(process.env.TOKEN).catch(console.error);

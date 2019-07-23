@@ -21,7 +21,7 @@ bot.on('ready', () => {
     bot.log('Bot loaded!');
 
     bot.generateInvite(bot.config.permissions).then((invite_link) => {
-        bot.log(`Invite Link: ${chalk.blue.underline(invite_link)}`);
+        bot.log(`Invite Link: ${chalk.cyan.underline(invite_link)}`);
     });
 });
 

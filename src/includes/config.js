@@ -1,6 +1,11 @@
 const { parseBoolean, resolveId } = require('./helpers');
 
-const owners = process.env.OWNER.split(',');
+if (!process.env.TOKEN || !/^[A-Za-z0-9._-]+$/.test(process.env.TOKEN)) {
+    console.error('Environment variable TOKEN is missing or incorrect.');
+    process.exit(1);
+}
+
+const owners = process.env.OWNER ? process.env.OWNER.split(',') : '';
 
 const prefix = process.env.DEFAULTPREFIX || '/';
 
