@@ -11,5 +11,3 @@ node_modules
 # Application
 data
 .env
-config.json
-*.sqlite

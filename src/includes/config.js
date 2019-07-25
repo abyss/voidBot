@@ -5,9 +5,11 @@ if (!process.env.TOKEN || !/^[A-Za-z0-9._-]+$/.test(process.env.TOKEN)) {
     process.exit(1);
 }
 
+const dataFolder = process.env.DATA_FOLDER || 'data';
+
 const owners = process.env.OWNER ? process.env.OWNER.split(',') : '';
 
-const prefix = process.env.DEFAULTPREFIX || '/';
+const prefix = process.env.DEFAULT_PREFIX || '/';
 
 const debug = parseBoolean(process.env.DEBUG);
 
@@ -27,6 +29,7 @@ const isOwner = (user) => {
 };
 
 module.exports = {
+    dataFolder,
     owners,
     prefix,
     debug,

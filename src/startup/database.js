@@ -1,13 +1,14 @@
 const database = require('../includes/database');
 const path = require('path');
 const fs = require('fs');
+const { dataFolder } = require('../includes/config');
 
-const dataFolder = path.resolve(__dirname, '../../data');
+const fullDataFolder = path.resolve(__dirname, '../../', dataFolder);
 
-if (!fs.existsSync(dataFolder)) {
-    fs.mkdirSync(dataFolder);
+if (!fs.existsSync(fullDataFolder)) {
+    fs.mkdirSync(fullDataFolder);
 }
 
-database.init(dataFolder);
+database.init(fullDataFolder);
 
 module.exports = database;
