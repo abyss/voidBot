@@ -1,4 +1,5 @@
 const path = require('path');
+const bot = require('../bot');
 
 class Module {
     constructor(handler, id, moduleDir) {
@@ -9,7 +10,7 @@ class Module {
 
         this.moduleFolder = path.resolve(moduleDir);
 
-        this.bot.handlers.commands.loadModCommands(this);
+        bot.handlers.commands.loadModCommands(this);
     }
 
     get config() {

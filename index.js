@@ -1,4 +1,4 @@
-const bot = require('./bot');
+const bot = require('./src/bot');
 
 function setTitle(title) {
     process.title = title;
@@ -27,4 +27,6 @@ const gracefulExit = () => {
 process.on('SIGINT', gracefulExit);
 process.on('SIGTERM', gracefulExit);
 
-bot.login(process.env.TOKEN).catch(console.error);
+bot.login(process.env.TOKEN).catch((err) => {
+    console.error('Login Error', err);
+});

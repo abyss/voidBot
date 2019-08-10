@@ -1,9 +1,12 @@
-const PermissionsHandler = require('../includes/permissions-handler');
+const permissions = require('../includes/permissions');
 const CommandHandler = require('../includes/command-handler');
-const ModuleHandler = require('../includes/module-handler');
 
 module.exports = (bot) => {
-    bot.handlers.permissions = new PermissionsHandler(bot);
+    bot.handlers.permissions = permissions;
     bot.handlers.commands = new CommandHandler(bot);
-    bot.handlers.mods = new ModuleHandler(bot);
+
+    // TODO: CommandHandler migrated, this goes back above the module.exports
+    const modules = require('../includes/modules');
+
+    bot.handlers.mods = modules;
 };
