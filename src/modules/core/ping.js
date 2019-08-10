@@ -1,4 +1,4 @@
-const { send } = require('../../includes/helpers');
+const { send } = require('../../utils/discord');
 const bot = require('../../bot');
 
 exports.run = async (msg) => {

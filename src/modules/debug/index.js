@@ -1,4 +1,4 @@
-const Module = require('../../includes/module-class');
+const Module = require('../../mod-loader/module-class');
 
 module.exports = class DebugModule extends Module {
     get config() {

@@ -1,4 +1,4 @@
-const { send, findUser } = require('../../includes/helpers');
+const { send, findUser } = require('../../utils/discord');
 
 exports.run = async (msg, args) => {
     const result = findUser(msg.guild, args.join(' '));

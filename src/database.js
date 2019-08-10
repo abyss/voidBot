@@ -1,8 +1,8 @@
 const low = require('lowdb');
 const FileAsync = require('lowdb/adapters/FileAsync');
 const path = require('path');
-const logger = require('../includes/logger');
-const { resolveId } = require('./helpers');
+const logger = require('./logger');
+const { resolveId } = require('./utils/discord');
 
 // A lot of efficiency can be gained here by caching the database
 // handlers instead of reopening on every db operation

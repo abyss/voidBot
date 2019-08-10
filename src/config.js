@@ -1,4 +1,5 @@
-const { parseBoolean, resolveId } = require('./helpers');
+const { parseBoolean } = require('./utils/general');
+const { resolveId } = require('./utils/discord');
 
 if (!process.env.TOKEN || !/^[A-Za-z0-9._-]+$/.test(process.env.TOKEN)) {
     console.error('Environment variable TOKEN is missing or incorrect.');

@@ -1,13 +1,10 @@
 const chalk = require('chalk');
+const discordjs = require('discord.js');
 
-const bot = require('./startup/discord');
+const bot = new discordjs.Client();
 module.exports = bot;
 
-bot.handlers = {};
-bot.config = require('./startup/config');
-require('./startup/logger')(bot); // Injects bot.log, debug, error methods
-bot.db = require('./startup/database');
-require('./startup/commands')(bot); // Injects handlers into bot.handlers
+require('./startup');
 
 bot.on('ready', () => {
     bot.log('Stats:');

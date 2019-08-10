@@ -1,5 +1,6 @@
-const Module = require('../../includes/module-class');
-const { findRole, asyncForEach } = require('../../includes/helpers');
+const Module = require('../../mod-loader/module-class');
+const { findRole } = require('../../utils/discord');
+const { asyncForEach }  = require('../../utils/general');
 
 module.exports = class AdminModule extends Module {
     get config() {

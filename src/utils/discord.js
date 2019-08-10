@@ -1,26 +1,6 @@
 const Fuse = require('fuse.js');
-const logger = require('./logger');
-const { resolveColor } = require('discord.js/src/client/ClientDataResolver');
+const logger = require('../logger');
 const { FLAGS } = require('discord.js').Permissions;
-
-exports.asyncForEach = async function asyncForEach(array, callback) {
-    for (let i = 0; i < array.length; i++) {
-        await callback(array[i], i, array);
-    }
-};
-
-exports.parseBoolean = function (input) {
-    if (typeof input === 'string') {
-        input = input.toLowerCase();
-        if (input === 'false') { return false; }
-        if (input === '0') { return false; }
-        if (input === 'no') { return false; }
-        if (input === 'off') { return false; }
-    }
-
-    if (input) return true;
-    else return false;
-};
 
 exports.resolveId = function (obj) {
     if (typeof obj === 'string') {
@@ -37,32 +17,6 @@ exports.send = async function (channel, msg) {
         logger.error(`There was an error posting msg: ${error}`);
     });
 };
-
-exports.hexColor = function (hex) {
-    if (!(typeof hex === 'number')) {
-        return parseInt(hex, 16);
-    } else {
-        return hex;
-    }
-};
-
-exports.rgbColor = function (red, green, blue) {
-    return (red << 16) + (green << 8) + blue;
-};
-
-exports.userColor = function (userId, guild) {
-    if (typeof userId === 'object') {
-        userId = userId.id;
-    }
-
-    if (guild) {
-        return guild.members.get(userId).displayColor;
-    } else {
-        return resolveColor('C27C0E');
-    }
-};
-
-exports.resolveColor = resolveColor;
 
 exports.findExactRole = function (guild, roleText) {
     // Override "everyone" to "@everyone" for a match

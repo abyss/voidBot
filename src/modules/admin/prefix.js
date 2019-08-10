@@ -1,4 +1,4 @@
-const { send } = require('../../includes/helpers');
+const { send } = require('../../utils/discord');
 
 exports.run = async (msg, args) => {
     if (args.length > 0) {

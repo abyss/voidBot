@@ -1,4 +1,4 @@
-const Module = require('../../includes/module-class');
+const Module = require('../../mod-loader/module-class');
 
 // Make sure you change the name here
 module.exports = class ModuleNameModule extends Module {

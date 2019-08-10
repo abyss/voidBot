@@ -1,4 +1,4 @@
-const bot = require('../bot');
+const bot = require('./bot');
 
 const hasPermission = async (guild, member, command) => {
     let position = -1;

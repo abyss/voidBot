@@ -1,4 +1,5 @@
-const { send, userColor } = require('../../includes/helpers');
+const { send } = require('../../utils/discord');
+const { userColor } = require('../../utils/colors');
 const { stripIndents } = require('common-tags');
 
 exports.run = async (msg, args) => {

@@ -1,4 +1,4 @@
-const { send, findRole } = require('../../includes/helpers');
+const { send, findRole } = require('../../utils/discord');
 
 exports.run = async (msg, args) => {
     const result = findRole(msg.guild, args.join(' '));

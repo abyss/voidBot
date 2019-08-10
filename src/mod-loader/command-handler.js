@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
-const { send, EXTENDED_FLAGS, userColor } = require('./helpers');
+const { send, EXTENDED_FLAGS } = require('../utils/discord');
+const { userColor } = require('../utils/colors');
 
 class CommandHandler {
     constructor(bot) {

@@ -1,4 +1,4 @@
-const { send } = require('../../includes/helpers');
+const { send } = require('../../utils/discord');
 const moment = require('moment');
 require('moment-duration-format');
 
