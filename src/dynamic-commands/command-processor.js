@@ -94,7 +94,7 @@ async function processMessage(message) {
     }
 
     // TODO: Compile this regex once after bot has initialized, not every message.
-    const regexTag = new RegExp(`^<@!?${bot.user.id}> `);
+    const regexTag = new RegExp(`^<@!?${bot.client.user.id}> `);
     if (regexTag.test(message.content)) {
         const split = message.content.trim().split(/ +/);
         cmdDetails.base = split[1];

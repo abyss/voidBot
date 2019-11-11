@@ -82,7 +82,7 @@ function rebuildCommandLookup() {
     // TODO: Rebuild commandLookup
 }
 
-// TODO: Convert this from returning strings to returning an error object with a message
+// TODO: Convert this from returning strings to returning an object { valid: boolean, msg: string }
 function validateCommand(command) {
     if (typeof command !== 'object') { return 'Exports are empty'; }
     if (typeof command.run !== 'function') { return 'Missing run function'; }

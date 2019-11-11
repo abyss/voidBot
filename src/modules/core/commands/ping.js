@@ -1,8 +1,8 @@
 const { send } = require('../../../utils/discord');
-const bot = require('../../../bot');
+const { client } = require('../../../bot');
 
 exports.run = async (msg) => {
-    send(msg.channel, `:ping_pong:  **|  Pong!** (${Math.ceil(bot.ping)}ms)`);
+    send(msg.channel, `:ping_pong:  **|  Pong!** (${Math.ceil(client.ping)}ms)`);
 
     return true;
 };

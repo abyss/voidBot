@@ -20,7 +20,7 @@ process.on('uncaughtException', (err) => {
 });
 
 const gracefulExit = () => {
-    bot.destroy();
+    bot.client.destroy();
     process.exit(0);
 };
 
@@ -29,6 +29,6 @@ process.on('SIGTERM', gracefulExit);
 
 // bot.login = () => Promise.resolve();
 
-bot.login(process.env.TOKEN).catch((err) => {
+bot.client.login(process.env.TOKEN).catch((err) => {
     console.error('Login Error', err);
 });

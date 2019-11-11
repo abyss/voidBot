@@ -1,11 +1,11 @@
-const bot = require('../../../bot');
+const { client } = require('../../../bot');
 const { send } = require('../../../utils/discord');
 const moment = require('moment');
 require('moment-duration-format');
 
 exports.run = async (msg) => {
     const formattedUptime = moment
-        .duration(bot.uptime)
+        .duration(client.uptime)
         .format('d [days], h [hours], m [minutes], [and] s [seconds]');
 
     send(msg.channel, `I have been connected to discord for ${formattedUptime}`);
