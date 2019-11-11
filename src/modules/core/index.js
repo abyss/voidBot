@@ -1,15 +1,5 @@
-const Module = require('../../mod-loader/module-class');
-
-module.exports = class CoreModule extends Module {
-    get config() {
-        return {
-            name: 'Core',
-            description: 'Core functionality',
-            debug: false // This makes it unusable to anyone besides process.env.OWNER
-        };
-    }
-
-    async hasPermission(guild, member, command) {
-        return this.bot.handlers.permissions.hasPermission(guild, member, command);
-    }
+module.exports.config = {
+    name: 'Core',
+    description: 'Core functionality',
+    debug: false
 };

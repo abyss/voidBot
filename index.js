@@ -27,6 +27,8 @@ const gracefulExit = () => {
 process.on('SIGINT', gracefulExit);
 process.on('SIGTERM', gracefulExit);
 
+// bot.login = () => Promise.resolve();
+
 bot.login(process.env.TOKEN).catch((err) => {
     console.error('Login Error', err);
 });

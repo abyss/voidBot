@@ -25,11 +25,17 @@ const database = require('./database');
 database.init(fullDataFolder);
 bot.db = database;
 
-bot.handlers = {};
 // Startup Command Management
-const permissions = require('./permissions');
-const CommandHandler = require('./mod-loader/command-handler');
+const permissions = require('./dynamic-commands/permissions');
+const loader = require('./dynamic-commands/command-loader');
+const processor = require('./dynamic-commands/command-processor');
+const modules = require('./dynamic-commands/module-loader');
 
-bot.handlers.permissions = permissions;
-bot.handlers.commands = new CommandHandler(bot);
-bot.handlers.mods = require('./mod-loader/modules');
+bot.commands = {
+    permissions,
+    loader,
+    processor,
+    modules
+};
+
+bot.commands.modules.loadAll();

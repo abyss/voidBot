@@ -11,9 +11,6 @@ bot.on('ready', () => {
     bot.log(`User: ${bot.user.tag} <ID: ${bot.user.id}>`);
     bot.log(`Users: ${bot.users.size}, Guilds: ${bot.guilds.size}`);
 
-    bot.handlers.commands.init();
-    bot.handlers.mods.init();
-
     bot.user.setPresence({ game: { name: `voidBot | @${bot.user.username} help` }, status: 'online' });
     bot.log('Bot loaded!');
 
@@ -24,7 +21,7 @@ bot.on('ready', () => {
 
 bot.on('message', message => {
     if (message.author.bot) { return; }
-    bot.handlers.commands.onMessage(message);
+    bot.commands.processor.onMessage(message);
 });
 
 // TODO: Handle ErrorEvent ECONNRESET gracefully without log when not debug

@@ -1,3 +1,5 @@
+const path = require('path');
+
 const { parseBoolean } = require('./utils/general');
 const { resolveId } = require('./utils/discord');
 
@@ -5,6 +7,8 @@ if (!process.env.TOKEN || !/^[A-Za-z0-9._-]+$/.test(process.env.TOKEN)) {
     console.error('Environment variable TOKEN is missing or incorrect.');
     process.exit(1);
 }
+
+const modulesFolder = path.resolve(__dirname, 'modules');
 
 const dataFolder = process.env.DATA_FOLDER || 'data';
 
@@ -30,6 +34,7 @@ const isOwner = (user) => {
 };
 
 module.exports = {
+    modulesFolder,
     dataFolder,
     owners,
     prefix,

@@ -1,12 +1,12 @@
 {
   "name": "voidbot",
   "version": "0.2.9",
-  "main": "src/bot.js",
+  "main": "index.js",
   "author": "abyss@voidinput.com",
   "license": "MIT",
   "scripts": {
-    "start": "node src/index.js",
-    "lint": "eslint \"src/**\""
+    "start": "node index.js",
+    "lint": "eslint \"src/**\" index.js"
   },
   "dependencies": {
     "chalk": "^2.4.2",
