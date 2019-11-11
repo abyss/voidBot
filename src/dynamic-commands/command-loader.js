@@ -41,9 +41,10 @@ function loadCommand(mod, id) {
     cmd.mod = mod;
     cmd.id = id;
 
-    const check = validateCommand(cmd);
-    if (check) {
-        throw new Error(`Error validating command '${id}' from module '${mod.id}': check`);
+    const result = validateCommand(cmd);
+
+    if (!result.valid) {
+        throw new Error(`Error validating command '${id}' from module '${mod.id}': ${result.message}`);
     }
     return cmd;
 }
@@ -83,54 +84,66 @@ function rebuildCommandLookup() {
 }
 
 // TODO: Convert this from returning strings to returning an object { valid: boolean, msg: string }
-function validateCommand(command) {
-    if (typeof command !== 'object') { return 'Exports are empty'; }
-    if (typeof command.run !== 'function') { return 'Missing run function'; }
-    if (typeof command.config !== 'object') { return 'Missing config object'; }
-    if (typeof command.config.name !== 'string') { return 'Config object missing "name"'; }
-    if (typeof command.config.cmd !== 'string') { return 'Config object missing "cmd"'; }
-    if (typeof command.config.description !== 'string') { return 'Config object missing "description"'; }
+function validateCommand(cmd) {
+    if (typeof cmd !== 'object')
+        return { valid: false, message: 'Not an object' };
 
-    if (typeof command.config.location !== 'string') {
-        bot.error(`Validation Error: '${command.id}' missing location. Using 'NONE'`);
-        command.config.location = 'NONE';
+    if (typeof cmd.run !== 'function')
+        return { valid: false, message: 'Missing run function' };
+
+    if (typeof cmd.config !== 'object')
+        return { valid: false, message: 'Missing config object' };
+
+    if (typeof cmd.config.name !== 'string')
+        return { valid: false, message: 'Config object missing "name"' };
+
+    if (typeof cmd.config.cmd !== 'string')
+        return { valid: false, message: 'Config object missing "cmd"' };
+
+    if (typeof cmd.config.description !== 'string')
+        return { valid: false, message: 'Config object missing "description"' };
+
+    if (typeof cmd.config.location !== 'string') {
+        bot.error(`Validation Error: '${cmd.id}' missing location. Using 'NONE'`);
+        cmd.config.location = 'NONE';
     } else {
-        let location = command.config.location;
+        let location = cmd.config.location;
         if (!['ALL', 'GUILD_ONLY', 'DM_ONLY', 'NONE'].includes(location)) {
-            bot.error(`Validation Error: '${command.id}' invalid location. Using 'NONE'`);
-            command.config.location = 'NONE';
+            bot.error(`Validation Error: '${cmd.id}' invalid location. Using 'NONE'`);
+            cmd.config.location = 'NONE';
         }
     }
 
-    if (!(command.config.alias instanceof Array)) {
-        command.config.alias = [];
-    }
+    if (!(cmd.config.alias instanceof Array))
+        cmd.config.alias = [];
 
-    if (!(command.config.botPermissions instanceof Array)) {
-        command.config.botPermissions = [];
-    }
 
-    if (!(command.config.defaultPermissions instanceof Array)) {
-        command.config.defaultPermissions = [];
-    }
+    if (!(cmd.config.botPermissions instanceof Array))
+        cmd.config.botPermissions = [];
 
-    for (const permission of command.config.defaultPermissions) {
+
+    if (!(cmd.config.defaultPermissions instanceof Array))
+        cmd.config.defaultPermissions = [];
+
+    for (const permission of cmd.config.defaultPermissions) {
         if (!(permission in EXTENDED_FLAGS)) {
-            return `Improper Default Permission ${permission} in ${command.id}`;
+            return {
+                valid: false,
+                message: `Improper Default Permission ${permission} in ${cmd.id}`
+            };
         }
     }
 
-    if (!(command.usage instanceof Map)) {
-        command.usage = new Map();
-    }
+    if (!(cmd.usage instanceof Map))
+        cmd.usage = new Map();
 
-    if (getCommand(command.config.cmd)) {
-        return 'duplicate command';
-    }
+    if (getCommand(cmd.config.cmd))
+        return { valid: false, message: 'duplicate command' };
 
-    if (command.config.alias.some(alias => getCommand(alias))) {
-        return 'duplicate alias';
-    }
+    if (cmd.config.alias.some(alias => getCommand(alias)))
+        return { valid: false, message: 'duplicate alias' };
+
+    return { valid: true, message: '' };
 }
 
 module.exports = {
