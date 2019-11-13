@@ -1,12 +1,14 @@
 const bot = require('../bot');
 
+const checkDebug = (member, command) => {
+    const debug = command.config.debug || command.mod.config.debug;
+    if (debug && !bot.config.isOwner(member)) return false;
+    return true;
+};
+
 const hasPermission = async (guild, member, command) => {
     let position = -1;
     let state = '';
-
-    if (command.config.debug || command.mod.config.debug) {
-        if (!bot.config.isOwner(member)) { return false; }
-    }
 
     for (const [id, role] of member.roles) {
         // highest position gets priority, in all non-undefined cases
@@ -43,6 +45,7 @@ const setCommandPermission = (guildId, cmdId, roleId, state = 'default') => {
 };
 
 module.exports = {
+    checkDebug,
     hasPermission,
     setCommandPermission
 };

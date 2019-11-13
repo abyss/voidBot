@@ -2,7 +2,7 @@ const bot = require('../bot');
 const { resolveId } = require('../utils/discord');
 const { send } = require('../utils/discord');
 const { getCommand } = require('./command-loader');
-const { hasPermission } = require('./permissions');
+const { checkDebug, hasPermission } = require('./permissions');
 
 async function getGuildPrefix(guild) {
     if (!guild) { return ''; }
@@ -44,7 +44,8 @@ async function onMessage(message) {
 
     if (!validLocation(message, command)) { return; }
 
-    // TODO: Vulnerability!! Permissions aren't checked when message is a DM
+    if (!checkDebug(message, command)) { return; }
+
     if (message.channel.type === 'text') {
         if (!await hasPermission(message.guild, message.member, command)) {
             return;
@@ -93,7 +94,6 @@ async function processMessage(message) {
         return cmdDetails;
     }
 
-    // TODO: Compile this regex once after bot has initialized, not every message.
     const regexTag = new RegExp(`^<@!?${bot.client.user.id}> `);
     if (regexTag.test(message.content)) {
         const split = message.content.trim().split(/ +/);

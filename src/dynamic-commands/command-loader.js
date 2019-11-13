@@ -83,7 +83,6 @@ function rebuildCommandLookup() {
     // TODO: Rebuild commandLookup
 }
 
-// TODO: Convert this from returning strings to returning an object { valid: boolean, msg: string }
 function validateCommand(cmd) {
     if (typeof cmd !== 'object')
         return { valid: false, message: 'Not an object' };
