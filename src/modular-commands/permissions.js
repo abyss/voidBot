@@ -1,8 +1,8 @@
 const bot = require('../bot');
 
-const checkDebug = (member, command) => {
+const checkDebug = (author, command) => {
     const debug = command.config.debug || command.mod.config.debug;
-    if (debug && !bot.config.isOwner(member)) return false;
+    if (debug && !bot.config.isOwner(author)) return false;
     return true;
 };
 

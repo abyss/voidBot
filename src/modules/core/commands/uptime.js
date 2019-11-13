@@ -1,5 +1,5 @@
 const { client } = require('../../../bot');
-const { send } = require('../../../utils/discord');
+const { send } = require('../../../utils/chat');
 const moment = require('moment');
 require('moment-duration-format');
 

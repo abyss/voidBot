@@ -1,3 +1,5 @@
+// TODO: Use real logger library
+
 const chalk = require('chalk');
 
 const config = {

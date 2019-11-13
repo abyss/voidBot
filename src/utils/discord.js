@@ -1,5 +1,5 @@
 const Fuse = require('fuse.js');
-const logger = require('../logger');
+const bot = require('../bot');
 const { FLAGS } = require('discord.js').Permissions;
 
 exports.resolveId = function (obj) {
@@ -12,10 +12,15 @@ exports.resolveId = function (obj) {
     }
 };
 
-exports.send = async function (channel, msg) {
-    channel.send(msg).catch(error => {
-        logger.error(`There was an error posting msg: ${error}`);
-    });
+exports.getGuildPrefix = async function (guild) {
+    if (!guild) { return ''; }
+
+    const prefix = await bot.db.get(guild, 'prefix');
+    if (prefix) {
+        return prefix;
+    }
+
+    return bot.config.prefix;
 };
 
 exports.findExactRole = function (guild, roleText) {

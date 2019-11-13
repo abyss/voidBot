@@ -1,9 +1,10 @@
 const path = require('path');
 const fs = require('fs');
 const bot = require('../bot');
-const { loadModCommands } = require('./command-loader');
+const { loadModCommands } = require('./cmd-loader');
 const modulesFolder = bot.config.modulesFolder;
 
+// TODO: Make modules[] a hashmap
 const modules = [];
 
 function loadAll() {

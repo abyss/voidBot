@@ -23,7 +23,7 @@ client.on('ready', () => {
 
 client.on('message', message => {
     if (message.author.bot) { return; }
-    bot.commands.processor.onMessage(message);
+    bot.commands.processor(message);
 });
 
 // TODO: Handle ErrorEvent ECONNRESET gracefully without log when not debug

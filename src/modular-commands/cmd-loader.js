@@ -1,11 +1,10 @@
 const path = require('path');
 const fs = require('fs');
 const bot = require('../bot');
+const hashmap = require('./hashmap');
+
 const { EXTENDED_FLAGS } = require('../utils/discord');
 const modulesFolder = bot.config.modulesFolder;
-
-const commands = [];
-const commandLookup = new Map(); // TODO: Extract commandLookup to own module?
 
 function loadModCommands(mod) {
     const modsCommands = [];
@@ -26,15 +25,6 @@ function loadModCommands(mod) {
 }
 
 function load(mod, id) {
-    const cmd = loadCommand(mod, id);
-    commands.push(cmd);
-    // TODO: Add cmd to commandLookup
-    bot.debug(`Loaded command '${id}' from module '${mod.id}'`);
-
-    return cmd;
-}
-
-function loadCommand(mod, id) {
     const file = path.resolve(modulesFolder, mod.id, 'commands', id);
     const cmd = loadCommandFile(file);
 
@@ -46,6 +36,10 @@ function loadCommand(mod, id) {
     if (!result.valid) {
         throw new Error(`Error validating command '${id}' from module '${mod.id}': ${result.message}`);
     }
+
+    hashmap.add(cmd);
+    bot.debug(`Loaded command '${id}' from module '${mod.id}'`);
+
     return cmd;
 }
 
@@ -59,28 +53,16 @@ function loadCommandFile(file) {
     return cmd;
 }
 
-function getCommand(id) {
-    return commands.find(cmd => cmd.id === id);
-}
-
 function unload(cmd) {
-    const index = commands.indexOf(cmd);
-    commands.splice(index, 1);
-
-    rebuildCommandLookup();
+    hashmap.remove(cmd);
 }
 
 function reload(id) {
-    const cmd = getCommand(id);
+    const cmd = hashmap.getCommand(id);
     const mod = cmd.mod;
 
     unload(cmd);
     load(mod, id);
-}
-
-function rebuildCommandLookup() {
-    commandLookup.clear();
-    // TODO: Rebuild commandLookup
 }
 
 function validateCommand(cmd) {
@@ -136,20 +118,13 @@ function validateCommand(cmd) {
     if (!(cmd.usage instanceof Map))
         cmd.usage = new Map();
 
-    if (getCommand(cmd.config.cmd))
-        return { valid: false, message: 'duplicate command' };
-
-    if (cmd.config.alias.some(alias => getCommand(alias)))
-        return { valid: false, message: 'duplicate alias' };
+    if (hashmap.getCommand(cmd.config.cmd))
+        return { valid: false, message: 'duplicate command or alias' };
 
     return { valid: true, message: '' };
 }
 
 module.exports = {
-    commands,
-    commandLookup,
-    getCommand,
-    rebuildCommandLookup,
     loadModCommands,
     load,
     unload,

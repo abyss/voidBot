@@ -1,4 +1,4 @@
-const { send } = require('../../../utils/discord');
+const { send } = require('../../../utils/chat');
 const { client } = require('../../../bot');
 
 exports.run = async (msg) => {
@@ -12,7 +12,7 @@ exports.usage = new Map();
 exports.config = {
     name: 'Ping',
     cmd: 'ping',
-    alias: [],
+    alias: ['p'],
     botPermissions: [], // Permissions needed by the bot to use this command.
     defaultPermissions: [], // Default permissions to use this command by user
     location: 'ALL', // 'GUILD_ONLY', 'DM_ONLY', 'ALL'

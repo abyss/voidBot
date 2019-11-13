@@ -26,16 +26,6 @@ database.init(fullDataFolder);
 bot.db = database;
 
 // Startup Command Management
-const permissions = require('./dynamic-commands/permissions');
-const loader = require('./dynamic-commands/command-loader');
-const processor = require('./dynamic-commands/command-processor');
-const modules = require('./dynamic-commands/module-loader');
-
-bot.commands = {
-    permissions,
-    loader,
-    processor,
-    modules
-};
+bot.commands = require('./modular-commands');
 
 bot.commands.modules.loadAll();

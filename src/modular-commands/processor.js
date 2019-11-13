@@ -1,50 +1,30 @@
 const bot = require('../bot');
-const { resolveId } = require('../utils/discord');
-const { send } = require('../utils/discord');
-const { getCommand } = require('./command-loader');
+const { getGuildPrefix } = require('../utils/discord');
+const { send, commandHelp } = require('../utils/chat');
+const { getCommand } = require('./hashmap');
 const { checkDebug, hasPermission } = require('./permissions');
 
-async function getGuildPrefix(guild) {
-    if (!guild) { return ''; }
-
-    const id = resolveId(guild);
-    const prefix = await bot.db.get(id, 'prefix');
-    if (prefix) {
-        return prefix;
-    }
-
-    return bot.config.prefix;
-}
-
-function validLocation(message, command) {
-    const type = message.channel.type;
+function validLocation(type, command) {
     const loc = command.config.location;
 
-    if (loc === 'ALL') { return true; }
-
-    if (type === 'text' && loc === 'GUILD_ONLY') {
-        return true;
-    }
-
-    if (type === 'dm' && loc === 'DM_ONLY') {
-        return true;
-    }
-
+    if (loc === 'ALL') return true;
+    if (type === 'text' && loc === 'GUILD_ONLY') return true;
+    if (type === 'dm' && loc === 'DM_ONLY') return true;
     return false;
 }
 
-async function onMessage(message) {
-    const processedCommand = await processMessage(message);
+async function processor(message) {
+    const commandStructure = await commandAttemptCheck(message);
 
-    // not a command
-    if (!processedCommand) return;
+    // not a command attempt
+    if (!commandStructure) return;
 
-    const command = getCommand(processedCommand.base);
+    const command = getCommand(commandStructure.base);
     if (!command) { return; }
 
-    if (!validLocation(message, command)) { return; }
+    if (!validLocation(message.channel.type, command)) { return; }
 
-    if (!checkDebug(message, command)) { return; }
+    if (!checkDebug(message.author, command)) { return; }
 
     if (message.channel.type === 'text') {
         if (!await hasPermission(message.guild, message.member, command)) {
@@ -53,34 +33,35 @@ async function onMessage(message) {
     }
 
     const success = await command
-        .run(message, processedCommand.args)
+        .run(message, commandStructure.args)
         .catch(error => {
             send(message.channel, `**:interrobang:  |  An error has occured:** ${error}`);
             bot.error(`Command error in ${command.id}: ${error}`);
         });
 
-    // TODO: Re-enable when sendCommandHelp finished
     // Only print help if command returns explicit false, not undefined.
-    // if (success === false) {
-    //     sendCommandHelp(message.channel, command);
-    // }
+    if (success === false) {
+        const help = commandHelp(command);
+        send(message.channel, help);
+    }
 }
 
-async function processMessage(message) {
+async function commandAttemptCheck(message) {
+    // TODO: abstract this to DRY? (don't repeat yourself)
     const cmdDetails = {
         base: '',
         args: []
     };
 
-
     if (message.channel.type === 'dm' || message.channel.type === 'group') {
+        // for direct messages, first word is base, rest is arguments, no prefix
         const split = message.content.trim().split(/ +/);
         cmdDetails.base = split[0];
         cmdDetails.args = split.slice(1);
         return cmdDetails;
     }
 
-    // If it's not a dm, and it's not a text channel, we're done here.
+    // If it's not a dm, and it's not a text channel, we don't care about it
     if (message.channel.type !== 'text') {
         return;
     }
@@ -88,6 +69,7 @@ async function processMessage(message) {
     const prefix = await getGuildPrefix(message.guild);
 
     if (message.content.startsWith(prefix)) {
+        // crop the prefix. first word is base, rest is arguments
         const split = message.content.substr(prefix.length).trim().split(/ +/);
         cmdDetails.base = split[0];
         cmdDetails.args = split.slice(1);
@@ -96,18 +78,15 @@ async function processMessage(message) {
 
     const regexTag = new RegExp(`^<@!?${bot.client.user.id}> `);
     if (regexTag.test(message.content)) {
+        // first word is tag, second word is base, rest is arguments
         const split = message.content.trim().split(/ +/);
         cmdDetails.base = split[1];
         cmdDetails.args = split.slice(2);
         return cmdDetails;
     }
 
-    // Not a command
+    // No prefix, no tag, not a command attempt.
     return;
 }
 
-module.exports = {
-    getGuildPrefix,
-    validLocation,
-    onMessage
-};
+module.exports = processor;
