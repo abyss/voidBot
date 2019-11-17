@@ -1,6 +1,4 @@
 require('dotenv').config();
-const path = require('path');
-const fs = require('fs');
 
 const bot = require('./bot');
 
@@ -14,18 +12,5 @@ bot.log = logger.log;
 bot.error = logger.error;
 bot.debug = logger.debug;
 
-// Startup Database
-const fullDataFolder = path.resolve(__dirname, '../../', bot.config.dataFolder);
-
-if (!fs.existsSync(fullDataFolder)) {
-    fs.mkdirSync(fullDataFolder);
-}
-
-const database = require('./database');
-database.init(fullDataFolder);
-bot.db = database;
-
-// Startup Command Management
+bot.db = require('./database');
 bot.commands = require('./modular-commands');
-
-bot.commands.modules.loadAll();

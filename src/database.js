@@ -1,17 +1,19 @@
 const low = require('lowdb');
 const FileAsync = require('lowdb/adapters/FileAsync');
 const path = require('path');
+const fs = require('fs');
+const config = require('./config');
 const logger = require('./logger');
 const { resolveId } = require('./utils/discord');
 
 // A lot of efficiency can be gained here by caching the database
 // handlers instead of reopening on every db operation
 
-let dataFolder;
+const dataFolder = path.resolve(__dirname, '../', config.dataFolder);
 
-const init = (folder) => {
-    dataFolder = folder;
-};
+if (!fs.existsSync(dataFolder)) {
+    fs.mkdirSync(dataFolder);
+}
 
 const dbHandle = (guild) => {
     if (!(typeof guild === 'string')) { throw new Error('dbHandle must be passed a string!'); }
@@ -57,7 +59,6 @@ const del = async (guild, key) => {
 };
 
 module.exports = {
-    init,
     get,
     set,
     delete: del

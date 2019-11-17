@@ -7,23 +7,21 @@ const modulesFolder = bot.config.modulesFolder;
 // TODO: Make modules[] a hashmap
 const modules = [];
 
-function loadAll() {
-    fs.readdirSync(modulesFolder).forEach(file => {
-        try {
-            const modFolder = path.resolve(modulesFolder, file);
-            if (!fs.statSync(modFolder).isDirectory()) { return; }
+fs.readdirSync(modulesFolder).forEach(file => {
+    try {
+        const modFolder = path.resolve(modulesFolder, file);
+        if (!fs.statSync(modFolder).isDirectory()) { return; }
 
-            if (file.startsWith('_')) {
-                bot.debug(`Skipped module '${file}' for preceding underscore`);
-                return;
-            }
-
-            load(file);
-        } catch (err) {
-            bot.error(`Failed to load module '${file}': ${err}`);
+        if (file.startsWith('_')) {
+            bot.debug(`Skipped module '${file}' for preceding underscore`);
+            return;
         }
-    });
-}
+
+        load(file);
+    } catch (err) {
+        bot.error(`Failed to load module '${file}': ${err}`);
+    }
+});
 
 function load(id) {
     const mod = loadModule(id);
@@ -72,7 +70,6 @@ function reload(id) {
 module.exports = {
     modules,
     getModule,
-    loadAll,
     load,
     unload,
     reload

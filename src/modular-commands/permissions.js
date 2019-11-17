@@ -13,7 +13,6 @@ const hasPermission = async (guild, member, command) => {
     for (const [id, role] of member.roles) {
         // highest position gets priority, in all non-undefined cases
         if (role.calculatedPosition > position) {
-            // have to pass command.id in brackets because of periods
             let newState = await bot.db.get(guild.id, `permissions['${command.id}'].groups.${id}`);
             if (newState) {
                 position = role.calculatedPosition;
@@ -37,10 +36,12 @@ const hasPermission = async (guild, member, command) => {
 
 const setCommandPermission = (guildId, cmdId, roleId, state = 'default') => {
     // state can be 'allow' 'deny' or 'default'
+    const dbKey = `permissions['${cmdId}'].groups.${roleId}`;
+
     if (state === 'allow' || state === 'deny') {
-        return bot.db.set(guildId, `permissions['${cmdId}'].groups.${roleId}`, state);
+        return bot.db.set(guildId, dbKey, state);
     } else {
-        return bot.db.delete(guildId, `permissions['${cmdId}'].groups.${roleId}`);
+        return bot.db.delete(guildId, dbKey);
     }
 };
 
