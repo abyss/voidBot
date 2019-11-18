@@ -1,4 +1,5 @@
 const { resolveColor } = require('discord.js/src/client/ClientDataResolver');
+const { resolveId } = require('./discord');
 
 exports.hexColor = function (hex) {
     if (!(typeof hex === 'number')) {
@@ -12,13 +13,11 @@ exports.rgbColor = function (red, green, blue) {
     return (red << 16) + (green << 8) + blue;
 };
 
-exports.userColor = function (userId, guild) {
-    if (typeof userId === 'object') {
-        userId = userId.id;
-    }
+exports.userColor = function (user, guild) {
+    const uid = resolveId(user);
 
     if (guild) {
-        return guild.members.get(userId).displayColor;
+        return guild.members.get(uid).displayColor;
     } else {
         return resolveColor('C27C0E');
     }

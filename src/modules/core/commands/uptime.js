@@ -25,6 +25,6 @@ exports.config = {
     botPermissions: [], // Guild permissions needed by the bot to use this command.
     defaultPermissions: [], // Default permissions to use this command by user
     location: 'ALL', // 'GUILD_ONLY', 'DM_ONLY', 'ALL' - where the command can be used
-    description: 'How long the bot has been connected to discord',
+    description: 'Responds with the bot\'s time connected to the discord server',
     debug: false // If true: unusable to anyone besides process.env.OWNER
 };

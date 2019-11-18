@@ -37,6 +37,7 @@ function getCommand(commandText) {
 }
 
 module.exports = {
+    commands,
     add,
     remove,
     rebuild,

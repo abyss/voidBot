@@ -45,8 +45,18 @@ const setCommandPermission = (guildId, cmdId, roleId, state = 'default') => {
     }
 };
 
+const validLocation = (type, command) => {
+    const loc = command.config.location;
+
+    if (loc === 'ALL') return true;
+    if (type === 'text' && loc === 'GUILD_ONLY') return true;
+    if (type === 'dm' && loc === 'DM_ONLY') return true;
+    return false;
+};
+
 module.exports = {
     checkDebug,
     hasPermission,
-    setCommandPermission
+    setCommandPermission,
+    validLocation
 };
