@@ -34,14 +34,14 @@ const hasPermission = async (guild, member, command) => {
     return member.hasPermission(commandDefaultPermissions);
 };
 
-const setCommandPermission = (guildId, cmdId, roleId, state = 'default') => {
+const setCommandPermission = (guild, cmdId, roleId, state = 'default') => {
     // state can be 'allow' 'deny' or 'default'
     const dbKey = `permissions['${cmdId}'].groups.${roleId}`;
 
     if (state === 'allow' || state === 'deny') {
-        return bot.db.set(guildId, dbKey, state);
+        return bot.db.set(guild, dbKey, state);
     } else {
-        return bot.db.delete(guildId, dbKey);
+        return bot.db.delete(guild, dbKey);
     }
 };
 

@@ -1,4 +1,4 @@
-module.exports.config = {
+exports.config = {
     name: 'Core',
     description: 'Core functionality',
     debug: false
