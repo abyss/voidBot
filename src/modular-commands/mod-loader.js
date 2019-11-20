@@ -1,10 +1,9 @@
 const path = require('path');
 const fs = require('fs');
 const bot = require('../bot');
-const { loadModCommands } = require('./cmd-loader');
+const { loadModCommands, unloadModCommands } = require('./cmd-loader');
 const modulesFolder = bot.config.modulesFolder;
 
-// TODO: Make modules[] a hashmap
 const modules = [];
 
 fs.readdirSync(modulesFolder).forEach(file => {
@@ -24,20 +23,15 @@ fs.readdirSync(modulesFolder).forEach(file => {
 });
 
 function load(id) {
-    const mod = loadModule(id);
-    modules.push(mod);
-    bot.log(`Loaded module ${id}`);
-}
-
-function loadModule(id) {
     const modFolder = path.resolve(modulesFolder, id);
     const mod = loadModuleFile(modFolder);
 
     mod.id = id;
 
     loadModCommands(mod);
+    modules.push(mod);
 
-    return mod;
+    bot.log(`Loaded module ${id}`);
 }
 
 function loadModuleFile(modFolder) {
@@ -55,7 +49,9 @@ function unload(id) {
     const mod = getModule(id);
     const index = modules.indexOf(mod);
     modules.splice(index, 1);
-    // TODO: Rebuild Command Map
+    unloadModCommands(mod);
+
+    bot.log(`Unloaded module ${id}`);
 }
 
 function getModule(id) {

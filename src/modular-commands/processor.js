@@ -1,6 +1,6 @@
 const bot = require('../bot');
 const { getGuildPrefix } = require('../utils/discord');
-const { send, sendCommandHelp } = require('../utils/chat');
+const { sendCommandHelp } = require('../utils/chat');
 const { getCommand } = require('./hashmap');
 const { checkDebug, hasPermission, validLocation } = require('./permissions');
 

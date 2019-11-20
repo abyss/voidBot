@@ -24,18 +24,23 @@ function loadModCommands(mod) {
     return modsCommands;
 }
 
-function load(mod, id) {
-    const file = path.resolve(modulesFolder, mod.id, 'commands', id);
-    const cmd = loadCommandFile(file);
+function unloadModCommands(mod) {
+    const commands = hashmap.commands.filter(cmd => cmd.mod === mod);
+    commands.forEach(cmd => unload(cmd));
+}
 
-    cmd.mod = mod;
-    cmd.id = id;
+function load(mod, id) {
+    const file = path.resolve(modulesFolder, mod.id, 'commands', `${id}.js`);
+    const cmd = loadCommandFile(file);
 
     const result = validateCommand(cmd);
 
     if (!result.valid) {
         throw new Error(`Error validating command '${id}' from module '${mod.id}': ${result.message}`);
     }
+
+    cmd.mod = mod;
+    cmd.id = id;
 
     hashmap.add(cmd);
     bot.debug(`Loaded command '${id}' from module '${mod.id}'`);
@@ -44,8 +49,9 @@ function load(mod, id) {
 }
 
 function loadCommandFile(file) {
-    if (!fs.existsSync(file + '.js')) { return; }
-    if (!fs.statSync(file + '.js').isFile()) { return; }
+    if (!fs.existsSync(file)) return;
+    if (!fs.statSync(file).isFile()) return;
+    if (!path.extname(file) === 'js') return;
 
     delete require.cache[require.resolve(file)];
 
@@ -55,6 +61,7 @@ function loadCommandFile(file) {
 
 function unload(cmd) {
     hashmap.remove(cmd);
+    bot.debug(`Unloaded command '${cmd.id}' from module '${cmd.mod.id}'`);
 }
 
 function reload(id) {
@@ -98,10 +105,8 @@ function validateCommand(cmd) {
     if (!(cmd.config.alias instanceof Array))
         cmd.config.alias = [];
 
-
     if (!(cmd.config.botPermissions instanceof Array))
         cmd.config.botPermissions = [];
-
 
     if (!(cmd.config.defaultPermissions instanceof Array))
         cmd.config.defaultPermissions = [];
@@ -126,6 +131,7 @@ function validateCommand(cmd) {
 
 module.exports = {
     loadModCommands,
+    unloadModCommands,
     load,
     unload,
     reload
