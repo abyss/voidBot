@@ -33,6 +33,10 @@ function load(mod, id) {
     const file = path.resolve(modulesFolder, mod.id, 'commands', `${id}.js`);
     const cmd = loadCommandFile(file);
 
+    if (!cmd) {
+        throw new Error(`Command '${id}' from module '${mod.id}' not found.`);
+    }
+
     const result = validateCommand(cmd);
 
     if (!result.valid) {
