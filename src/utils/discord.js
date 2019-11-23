@@ -87,5 +87,20 @@ exports.findUser = function (guild, userText) {
     return results[0];
 };
 
+exports.serverStats = async function (guild) {
+    if (!guild.available) return;
+
+    const stats = {
+        id: guild.id,
+        name: guild.name,
+        owner: {
+            id: guild.id,
+            tag: guild.owner.user.tag
+        }
+    };
+
+    await bot.db.set(guild.id, '__metadata__', stats);
+};
+
 // Extend flags to include NOONE
 exports.EXTENDED_FLAGS = { ...FLAGS, ...{ 'NOONE': '' } };
