@@ -9,17 +9,17 @@
     "lint": "eslint \"src/**\" index.js"
   },
   "dependencies": {
-    "chalk": "^2.4.2",
+    "chalk": "^3.0.0",
     "common-tags": "^1.8.0",
     "discord.js": "^11.5.1",
-    "dotenv": "^8.1.0",
-    "fuse.js": "^3.4.5",
+    "dotenv": "^8.2.0",
+    "fuse.js": "^3.4.6",
     "lodash": "^4.17.15",
     "lowdb": "^1.0.0",
     "moment": "^2.24.0",
     "moment-duration-format": "^2.3.2"
   },
   "devDependencies": {
-    "eslint": "^6.5.1"
+    "eslint": "^6.7.0"
   }
 }
