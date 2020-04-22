@@ -23,4 +23,12 @@ exports.userColor = function (user, guild) {
     }
 };
 
+exports.randomColor = function() {
+    return [
+        Math.floor(Math.random() * 256),
+        Math.floor(Math.random() * 256),
+        Math.floor(Math.random() * 256)
+    ];
+};
+
 exports.resolveColor = resolveColor;

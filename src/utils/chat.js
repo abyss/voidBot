@@ -3,8 +3,8 @@ const { userColor } = require('./colors');
 const { getGuildPrefix } = require('./discord');
 const bot = require('../bot');
 
-async function send(channel, msg) {
-    channel.send(msg).catch(error => {
+async function send(channel, ...msg) {
+    channel.send(...msg).catch(error => {
         logger.error(`There was an error posting msg: ${error}`);
     });
 }
