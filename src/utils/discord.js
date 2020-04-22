@@ -64,7 +64,7 @@ exports.findRole = function (guild, roleText) {
     else return undefined;
 };
 
-exports.findUser = function (guild, userText) {
+exports.findMember = function (guild, userText) {
     const options = {
         shouldSort: true,
         threshhold: 0.3, // between 0 (perfect) to 1 (complete mismatch)
