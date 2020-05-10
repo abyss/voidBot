@@ -1,19 +1,34 @@
 const bot = require('../bot');
 
-const checkDebug = (author, command) => {
+const checkDebug = (user, command) => {
     const debug = command.config.debug || command.mod.config.debug;
-    if (debug && !bot.config.isOwner(author)) return false;
+    if (debug && !bot.config.isOwner(user)) return false;
     return true;
+};
+
+const hasDefaultPermission = (member, command) => {
+    const commandDefaultPermissions = command.config.defaultPermissions;
+
+    if (commandDefaultPermissions.includes('NOONE')) {
+        return false;
+    }
+
+    return member.hasPermission(commandDefaultPermissions);
 };
 
 const hasPermission = async (guild, member, command) => {
     let position = -1;
     let state = '';
 
+    const commandPermission = await bot.db.get(guild, `permissions['${command.id}'].groups`);
+
+    if (typeof commandPermission !== 'object')
+        return hasDefaultPermission(member, command);
+
     for (const [id, role] of member.roles) {
         // highest position gets priority, in all non-undefined cases
         if (role.calculatedPosition > position) {
-            let newState = await bot.db.get(guild.id, `permissions['${command.id}'].groups.${id}`);
+            let newState = commandPermission[id];
             if (newState) {
                 position = role.calculatedPosition;
                 state = newState;
@@ -25,23 +40,22 @@ const hasPermission = async (guild, member, command) => {
     if (state === 'deny') return false;
 
     // None of the above? Fall back to Default
-    const commandDefaultPermissions = command.config.defaultPermissions;
-
-    if (commandDefaultPermissions.includes('NOONE')) {
-        return false;
-    }
-
-    return member.hasPermission(commandDefaultPermissions);
+    return hasDefaultPermission(member, command);
 };
 
-const setCommandPermission = (guild, cmdId, roleId, state = 'default') => {
+const setPermission = async (guild, command, role, state = 'default') => {
     // state can be 'allow' 'deny' or 'default'
-    const dbKey = `permissions['${cmdId}'].groups.${roleId}`;
+    const dbKey = `permissions['${command.id}'].groups.${role.id}`;
+
+    let previousState = await bot.db.get(guild, dbKey);
+    if (!previousState) previousState = 'default';
 
     if (state === 'allow' || state === 'deny') {
-        return bot.db.set(guild, dbKey, state);
+        await bot.db.set(guild, dbKey, state);
+        return previousState;
     } else {
-        return bot.db.delete(guild, dbKey);
+        await bot.db.delete(guild, dbKey);
+        return previousState;
     }
 };
 
@@ -57,6 +71,7 @@ const validLocation = (type, command) => {
 module.exports = {
     checkDebug,
     hasPermission,
-    setCommandPermission,
+    hasDefaultPermission,
+    setPermission,
     validLocation
 };
