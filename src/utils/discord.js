@@ -1,6 +1,7 @@
 const Fuse = require('fuse.js');
 const bot = require('../bot');
 const { FLAGS } = require('discord.js').Permissions;
+const { asyncForEach } = require('./general');
 
 exports.resolveId = function (obj) {
     if (typeof obj === 'string') {
@@ -104,6 +105,30 @@ exports.serverStats = async function (guild) {
     };
 
     await bot.db.set(guild.id, '__metadata__', stats);
+};
+
+exports.cleanPermissions = async function (guild) {
+    const permissions = await bot.db.get(guild, 'permissions');
+    if (!permissions) return;
+    for (let command of Object.keys(permissions)) {
+        for (let roleId of Object.keys(permissions[command].groups)) {
+            const role = guild.roles.get(roleId);
+            if (!role) {
+                bot.debug(`Deleting role ID: ${roleId} on ${guild.name}`);
+                await bot.db.delete(
+                    guild,
+                    `permissions.${command}.groups.${roleId}`
+                );
+            }
+        }
+    }
+};
+
+exports.allServerUpkeep = async function () {
+    asyncForEach(bot.client.guilds.array(), async (guild) => {
+        await exports.serverStats(guild);
+        await exports.cleanPermissions(guild);
+    });
 };
 
 // Extend flags to include NOONE

@@ -8,14 +8,7 @@ bot.client = client;
 
 require('./startup');
 
-const { asyncForEach } = require('./utils/general');
-const { serverStats } = require('./utils/discord');
-
-function allServerStats() {
-    asyncForEach(client.guilds.array(), async (guild) => {
-        await serverStats(guild);
-    });
-}
+const { serverStats, allServerUpkeep } = require('./utils/discord');
 
 client.on('ready', () => {
     bot.log('Stats:');
@@ -29,8 +22,8 @@ client.on('ready', () => {
         bot.log(`Invite Link: ${chalk.cyan.underline(invite_link)}`);
     });
 
-    allServerStats();
-    client.setInterval(allServerStats, 1000 * 60 * 30); // Every 30 Mins
+    allServerUpkeep();
+    client.setInterval(allServerUpkeep, 1000 * 60 * 30); // Every 30 Mins
 });
 
 client.on('message', message => {
