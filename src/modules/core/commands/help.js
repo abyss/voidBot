@@ -56,9 +56,9 @@ exports.run = async (msg, args) => {
                 *You can tag the bot instead of using a prefix!*
 
                 ${modSection.join('\n\n')}`,
-            footer: {
+            author: {
+                name: 'voidBot Help Command',
                 icon_url: bot.client.user.avatarURL,
-                text: 'voidBot Help Command'
             }
         };
 

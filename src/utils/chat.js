@@ -35,14 +35,14 @@ exports.sendCommandHelp = async function (channel, command) {
     }
 
     const embed = {
+        author: {
+            name: 'voidBot Help Command',
+            icon_url: bot.client.user.avatarURL,
+        },
         color: color,
         title: command.config.name,
         description: description,
-        fields: embedFields,
-        footer: {
-            icon_url: bot.client.user.avatarURL,
-            text: 'voidBot Help Command'
-        }
+        fields: embedFields
     };
 
     return send(channel, { 'embed': embed });

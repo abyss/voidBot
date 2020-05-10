@@ -33,7 +33,7 @@ function rebuild() {
 }
 
 function getCommand(commandText) {
-    return commandMap.get(commandText);
+    return commandMap.get(commandText.toLowerCase());
 }
 
 module.exports = {
