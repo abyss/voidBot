@@ -111,13 +111,13 @@ exports.cleanPermissions = async function (guild) {
     const permissions = await bot.db.get(guild, 'permissions');
     if (!permissions) return;
     for (let command of Object.keys(permissions)) {
-        for (let roleId of Object.keys(permissions[command].groups)) {
+        for (let roleId of Object.keys(permissions[command])) {
             const role = guild.roles.get(roleId);
             if (!role) {
                 bot.debug(`Deleting role ID: ${roleId} on ${guild.name}`);
                 await bot.db.delete(
                     guild,
-                    `permissions.${command}.groups.${roleId}`
+                    `permissions.${command}.${roleId}`
                 );
             }
         }

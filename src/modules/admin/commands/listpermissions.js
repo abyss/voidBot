@@ -11,10 +11,8 @@ async function getCommandPermOutput(command, guild, perms, showDefault = false) 
     let everyoneModified = false;
     let changedDefault = false;
 
-    if (typeof perms.groups !== 'object') perms.groups = {};
-
     // Permissions in Database
-    for (let [roleId, rolePerm] of Object.entries(perms.groups)) {
+    for (let [roleId, rolePerm] of Object.entries(perms)) {
         const role = guild.roles.get(roleId);
         if (!role) continue;
 

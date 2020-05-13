@@ -32,7 +32,7 @@ const hasPermission = async (guild, member, command) => {
     let position = -1;
     let state = '';
 
-    const commandPermission = await bot.db.get(guild, `permissions['${command.id}'].groups`);
+    const commandPermission = await bot.db.get(guild, `permissions['${command.id}']`);
 
     if (typeof commandPermission !== 'object')
         return hasDefaultPermission(member, command);
@@ -57,7 +57,7 @@ const hasPermission = async (guild, member, command) => {
 
 const setPermission = async (guild, command, role, state = 'default') => {
     // state can be 'allow' 'deny' or 'default'
-    const dbKey = `permissions['${command.id}'].groups.${role.id}`;
+    const dbKey = `permissions['${command.id}'].${role.id}`;
 
     let previousState = await bot.db.get(guild, dbKey);
     if (!previousState) previousState = 'default';
