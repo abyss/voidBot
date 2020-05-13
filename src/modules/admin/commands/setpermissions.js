@@ -2,6 +2,7 @@ const bot = require('../../../bot');
 const { send } = require('../../../utils/chat');
 const { findRole } = require('../../../utils/discord');
 const { stripIndentsExtra } = require('../../../utils/general');
+const { hasPermission, setPermission } = require('../../../modular-commands/permissions');
 
 exports.run = async (msg, args) => {
     if (args.length !== 3) {
@@ -46,7 +47,6 @@ exports.run = async (msg, args) => {
         return true;
     }
 
-    const { hasPermission, setPermission } = bot.commands.permissions;
 
     const prevState = await setPermission(msg.guild, command, role, state);
 

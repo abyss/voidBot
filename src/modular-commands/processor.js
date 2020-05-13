@@ -5,23 +5,18 @@ const { getCommand } = require('./hashmap');
 const { checkDebug, moduleEnabled, hasPermission, validLocation } = require('./permissions');
 
 async function processor(message) {
-    const commandStructure = await commandAttemptCheck(message);
-    if (!commandStructure) return; // not a command attempt
+    const commandAttempt = await commandAttemptCheck(message);
+    if (!commandAttempt) return; // not a command attempt
 
-    const command = getCommand(commandStructure.base);
+    const command = getCommand(commandAttempt.base);
     if (!command) return;
 
     if (!validLocation(message.channel.type, command)) return;
     if (!checkDebug(message.author, command)) return;
     if (!await moduleEnabled(message.guild, command.mod)) return;
+    if (!await hasPermission(message.guild, message.member, command)) return;
 
-    if (message.channel.type === 'text') {
-        if (!await hasPermission(message.guild, message.member, command)) {
-            return;
-        }
-    }
-
-    const success = await command.run(message, commandStructure.args);
+    const success = await command.run(message, commandAttempt.args);
 
     // Only print help if command returns explicit false, not undefined.
     if (success === false) sendCommandHelp(message.channel, command);

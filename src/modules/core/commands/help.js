@@ -17,13 +17,8 @@ exports.run = async (msg, args) => {
             if (!validLocation(type, command)) continue;
 
             if (!checkDebug(msg.author, command)) continue;
-            if (!moduleEnabled(msg.guild, command.mod)) continue;
-
-            // type === text is a guild text channel, only
-            if (type === 'text') {
-                if (!await hasPermission(msg.guild, msg.member, command))
-                    continue;
-            }
+            if (!await moduleEnabled(msg.guild, command.mod)) continue;
+            if (!await hasPermission(msg.guild, msg.member, command)) continue;
 
             const modName = command.mod.config.name;
 
@@ -82,11 +77,10 @@ exports.run = async (msg, args) => {
         if (!checkDebug(msg.author, command))
             return commandNotFound(msg.channel, cmdText);
 
-        if (!moduleEnabled(msg.guild, command.mod))
+        if (!await moduleEnabled(msg.guild, command.mod))
             return commandNotFound(msg.channel, cmdText);
 
-        // if this is in a guild, check permissions for command.
-        if (type === 'text' && !await hasPermission(msg.guild, msg.member, command))
+        if (!await hasPermission(msg.guild, msg.member, command))
             return commandNotFound(msg.channel, cmdText);
 
         sendCommandHelp(msg.channel, command);
