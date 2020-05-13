@@ -4,9 +4,9 @@ const { getGuildPrefix } = require('../../../utils/discord');
 const { userColor } = require('../../../utils/colors');
 const { sendCommandHelp } = require('../../../utils/chat');
 const { stripIndents } = require('common-tags');
+const { checkDebug, moduleEnabled, hasPermission, validLocation } = require('../../../modular-commands/permissions');
 
 exports.run = async (msg, args) => {
-    const { validLocation, hasPermission, checkDebug } = bot.commands.permissions;
     const type = msg.channel.type;
 
     if (args.length === 0) {
@@ -17,6 +17,7 @@ exports.run = async (msg, args) => {
             if (!validLocation(type, command)) continue;
 
             if (!checkDebug(msg.author, command)) continue;
+            if (!moduleEnabled(msg.guild, command.mod)) continue;
 
             // type === text is a guild text channel, only
             if (type === 'text') {
@@ -79,6 +80,9 @@ exports.run = async (msg, args) => {
             return commandNotFound(msg.channel, cmdText);
 
         if (!checkDebug(msg.author, command))
+            return commandNotFound(msg.channel, cmdText);
+
+        if (!moduleEnabled(msg.guild, command.mod))
             return commandNotFound(msg.channel, cmdText);
 
         // if this is in a guild, check permissions for command.

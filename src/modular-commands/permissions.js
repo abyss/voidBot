@@ -16,7 +16,19 @@ const hasDefaultPermission = (member, command) => {
     return member.hasPermission(commandDefaultPermissions);
 };
 
+const moduleEnabled = async (guild, mod) => {
+    if (!mod) return false;
+
+    const modEnabled = mod.config.enabled;
+    let dbEnabled;
+    if (guild) dbEnabled = await bot.db.get(guild, `modules.${mod.id}`);
+
+    return typeof dbEnabled === 'boolean' ? dbEnabled : modEnabled;
+};
+
 const hasPermission = async (guild, member, command) => {
+    if (!guild) return true; // All DM are permitted.
+
     let position = -1;
     let state = '';
 
@@ -70,6 +82,7 @@ const validLocation = (type, command) => {
 
 module.exports = {
     checkDebug,
+    moduleEnabled,
     hasPermission,
     hasDefaultPermission,
     setPermission,

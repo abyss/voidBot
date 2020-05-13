@@ -37,14 +37,14 @@ function load(mod, id) {
         throw new Error(`Command '${id}' from module '${mod.id}' not found.`);
     }
 
+    cmd.mod = mod;
+    cmd.id = id;
+
     const result = validateCommand(cmd);
 
     if (!result.valid) {
         throw new Error(`Error validating command '${id}' from module '${mod.id}': ${result.message}`);
     }
-
-    cmd.mod = mod;
-    cmd.id = id;
 
     hashmap.add(cmd);
     bot.debug(`Loaded command '${id}' from module '${mod.id}'`);

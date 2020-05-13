@@ -14,3 +14,4 @@ bot.debug = logger.debug;
 
 bot.db = require('./database');
 bot.commands = require('./modular-commands');
+bot.commands.modules.loadAll();

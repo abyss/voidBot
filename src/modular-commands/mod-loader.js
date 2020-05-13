@@ -6,27 +6,63 @@ const modulesFolder = bot.config.modulesFolder;
 
 const modules = [];
 
-fs.readdirSync(modulesFolder).forEach(file => {
-    try {
-        const modFolder = path.resolve(modulesFolder, file);
-        if (!fs.statSync(modFolder).isDirectory()) { return; }
+function loadAll() {
+    fs.readdirSync(modulesFolder).forEach(file => {
+        try {
+            const modFolder = path.resolve(modulesFolder, file);
+            if (!fs.statSync(modFolder).isDirectory()) { return; }
 
-        if (file.startsWith('_')) {
-            bot.debug(`Skipped module '${file}' for preceding underscore`);
-            return;
+            if (file.startsWith('_')) {
+                bot.debug(`Skipped module '${file}' for preceding underscore`);
+                return;
+            }
+
+            load(file);
+        } catch (err) {
+            bot.error(`Failed to load module '${file}': ${err}`);
         }
+    });
+}
 
-        load(file);
-    } catch (err) {
-        bot.error(`Failed to load module '${file}': ${err}`);
+function validateModule(module) {
+    if (typeof module !== 'object')
+        return { valid: false, message: 'Not an object' };
+
+    if (typeof module.config !== 'object')
+        return { valid: false, message: 'Missing config object' };
+
+    if (typeof module.config.name !== 'string')
+        return { valid: false, message: 'Config object missing "name"' };
+
+    if (typeof module.config.enabled !== 'boolean') {
+        module.config.enabled = true;
+        bot.debug(`Validation Error: '${module.id}' missing enabled. Using 'true'`);
     }
-});
+
+    if (typeof module.config.description !== 'string')
+        return { valid: false, message: 'Config object missing "description"' };
+
+    if (typeof module.config.debug !== 'boolean') {
+        module.config.debug = false;
+        bot.debug(`Validation Error: '${module.id}' missing debug. Using 'false'`);
+    }
+
+    if (typeof module.config.private !== 'boolean')
+        module.config.private = false;
+
+    return { valid: true, message: '' };
+}
 
 function load(id) {
     const modFolder = path.resolve(modulesFolder, id);
     const mod = loadModuleFile(modFolder);
 
     mod.id = id;
+
+    const result = validateModule(mod);
+    if (!result.valid) {
+        throw new Error(`Error validating module '${id}': ${result.message}`);
+    }
 
     loadModCommands(mod);
     modules.push(mod);
@@ -40,7 +76,6 @@ function loadModuleFile(modFolder) {
     }
 
     const mod = require(modFolder);
-    // TODO: Validate Module
 
     return mod;
 }
@@ -65,6 +100,7 @@ function reload(id) {
 
 module.exports = {
     modules,
+    loadAll,
     getModule,
     load,
     unload,

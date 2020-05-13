@@ -2,7 +2,7 @@ const bot = require('../bot');
 const { getGuildPrefix } = require('../utils/discord');
 const { sendCommandHelp } = require('../utils/chat');
 const { getCommand } = require('./hashmap');
-const { checkDebug, hasPermission, validLocation } = require('./permissions');
+const { checkDebug, moduleEnabled, hasPermission, validLocation } = require('./permissions');
 
 async function processor(message) {
     const commandStructure = await commandAttemptCheck(message);
@@ -13,6 +13,7 @@ async function processor(message) {
 
     if (!validLocation(message.channel.type, command)) return;
     if (!checkDebug(message.author, command)) return;
+    if (!await moduleEnabled(message.guild, command.mod)) return;
 
     if (message.channel.type === 'text') {
         if (!await hasPermission(message.guild, message.member, command)) {
