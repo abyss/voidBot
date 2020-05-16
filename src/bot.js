@@ -13,9 +13,9 @@ const { serverStats, allServerUpkeep } = require('./utils/discord');
 client.on('ready', () => {
     bot.log('Stats:');
     bot.log(`User: ${client.user.tag} <ID: ${client.user.id}>`);
-    bot.log(`Users: ${client.users.size}, Guilds: ${client.guilds.size}`);
+    bot.log(`Users: ${client.users.cache.size}, Guilds: ${client.guilds.cache.size}`);
 
-    client.user.setPresence({ game: { name: `voidBot | @${client.user.username} help` }, status: 'online' });
+    client.user.setPresence({ activity: { name: `voidBot | @${client.user.username} help` }, status: 'online' });
     bot.log('Bot loaded!');
 
     client.generateInvite(bot.config.permissions).then((invite_link) => {
@@ -34,10 +34,9 @@ client.on('message', message => {
 client.on('guildCreate', guild => {
     serverStats(guild);
     bot.log(`Joined new guild: ${guild.name} (${guild.id})`);
-    bot.log(`Users: ${client.users.size}, Guilds: ${client.guilds.size}`);
+    bot.log(`Users: ${client.users.cache.size}, Guilds: ${client.guilds.cache.size}`);
 });
 
-// TODO: Handle ErrorEvent ECONNRESET gracefully without log when not debug
 client.on('error', err => {
     const errorMsg = (err.stack || err.error || err || '').toString();
     bot.error(`discord.js Error: \n${errorMsg}`);

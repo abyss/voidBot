@@ -1,7 +1,7 @@
 const bot = require('../../../bot');
 const { send } = require('../../../utils/chat');
 const { getGuildPrefix } = require('../../../utils/discord');
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { stripIndentsExtra } = require('../../../utils/general');
 const { userColor } = require('../../../utils/colors');
 
@@ -13,7 +13,7 @@ async function getCommandPermOutput(command, guild, perms, showDefault = false) 
 
     // Permissions in Database
     for (let [roleId, rolePerm] of Object.entries(perms)) {
-        const role = guild.roles.get(roleId);
+        const role = guild.roles.cache.get(roleId);
         if (!role) continue;
 
         commandPermissions.push({
@@ -54,7 +54,7 @@ async function getCommandPermOutput(command, guild, perms, showDefault = false) 
 }
 
 async function listAllPermissions(msg) {
-    const embed = new RichEmbed();
+    const embed = new MessageEmbed();
 
     let permissions = await bot.db.get(msg.guild, 'permissions');
     if (typeof permissions !== 'object') permissions = {};
@@ -96,7 +96,7 @@ async function listCommandPermissions(msg, cmdText) {
     const field = await getCommandPermOutput(command, msg.guild, permissions, true);
 
     if (field) {
-        const embed = new RichEmbed()
+        const embed = new MessageEmbed()
             .setTitle(`Permissions for: ${field.title}`)
             .setColor(userColor(bot.client.user.id, msg.guild))
             .setDescription(field.content);

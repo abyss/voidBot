@@ -3,7 +3,7 @@ const { send } = require('../../../utils/chat');
 exports.run = async (msg) => {
     const roleList = [];
 
-    msg.guild.roles.forEach(role => {
+    msg.guild.roles.cache.forEach(role => {
         roleList.push(`${role.id}: ${role.name}`);
     });
 

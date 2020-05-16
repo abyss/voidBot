@@ -2,7 +2,7 @@ const { send } = require('../../../utils/chat');
 const { client } = require('../../../bot');
 
 exports.run = async (msg) => {
-    send(msg.channel, `:ping_pong:  **|  Pong!** (${Math.ceil(client.ping)}ms)`);
+    send(msg.channel, `:ping_pong:  **|  Pong!** (${Math.ceil(client.ws.ping)}ms)`);
 
     return true;
 };

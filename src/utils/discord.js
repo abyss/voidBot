@@ -30,7 +30,7 @@ exports.findExactRole = function (guild, roleText) {
         roleText = '@everyone';
     }
 
-    let role = guild.roles.find(role => {
+    let role = guild.roles.cache.find(role => {
         if (role.name === roleText) return true;
         if (role.id === roleText) return true;
         return false;
@@ -58,7 +58,7 @@ exports.findRole = function (guild, roleText) {
         roleText = tagged[1]; // First is the entire string, second is Id
     }
 
-    const fuse = new Fuse(Array.from(guild.roles.values()), options);
+    const fuse = new Fuse(Array.from(guild.roles.cache.values()), options);
     const results = fuse.search(roleText);
 
     if (Array.isArray(results) && results[0]) return results[0].item;
@@ -85,7 +85,7 @@ exports.findMember = function (guild, userText) {
         userText = tagged[1]; // First is the entire string, second is Id
     }
 
-    const fuse = new Fuse(Array.from(guild.members.values()), options);
+    const fuse = new Fuse(Array.from(guild.members.cache.values()), options);
     const results = fuse.search(userText);
 
     if (Array.isArray(results) && results[0]) return results[0].item;
@@ -112,7 +112,7 @@ exports.cleanPermissions = async function (guild) {
     if (!permissions) return;
     for (let command of Object.keys(permissions)) {
         for (let roleId of Object.keys(permissions[command])) {
-            const role = guild.roles.get(roleId);
+            const role = guild.roles.cache.get(roleId);
             if (!role) {
                 bot.debug(`Deleting role ID: ${roleId} on ${guild.name}`);
                 await bot.db.delete(
@@ -125,7 +125,7 @@ exports.cleanPermissions = async function (guild) {
 };
 
 exports.allServerUpkeep = async function () {
-    asyncForEach(bot.client.guilds.array(), async (guild) => {
+    asyncForEach(bot.client.guilds.cache.array(), async (guild) => {
         await exports.serverStats(guild);
         await exports.cleanPermissions(guild);
     });

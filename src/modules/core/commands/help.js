@@ -54,7 +54,7 @@ exports.run = async (msg, args) => {
                 ${modSection.join('\n\n')}`,
             author: {
                 name: 'voidBot Help Command',
-                icon_url: bot.client.user.avatarURL,
+                icon_url: bot.client.user.avatarURL(),
             }
         };
 

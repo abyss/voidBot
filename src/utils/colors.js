@@ -1,4 +1,3 @@
-const { resolveColor } = require('discord.js/src/client/ClientDataResolver');
 const { resolveId } = require('./discord');
 
 exports.hexColor = function (hex) {
@@ -17,9 +16,9 @@ exports.userColor = function (user, guild) {
     const uid = resolveId(user);
 
     if (guild) {
-        return guild.members.get(uid).displayColor;
+        return guild.members.cache.get(uid).displayColor;
     } else {
-        return resolveColor('C27C0E');
+        return 'C27C0E';
     }
 };
 
@@ -30,5 +29,3 @@ exports.randomColor = function() {
         Math.floor(Math.random() * 256)
     ];
 };
-
-exports.resolveColor = resolveColor;
