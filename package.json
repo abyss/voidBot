@@ -1,6 +1,6 @@
 {
   "name": "voidbot",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "main": "index.js",
   "author": "abyss@voidinput.com",
   "license": "MIT",
@@ -13,13 +13,13 @@
     "common-tags": "^1.8.0",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
-    "fuse.js": "^5.2.3",
+    "fuse.js": "^6.0.0",
     "lodash": "^4.17.15",
     "lowdb": "^1.0.0",
-    "moment": "^2.24.0",
+    "moment": "^2.25.3",
     "moment-duration-format": "^2.3.2"
   },
   "devDependencies": {
-    "eslint": "^6.8.0"
+    "eslint": "^7.0.0"
   }
 }
