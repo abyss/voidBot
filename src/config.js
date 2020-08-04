@@ -20,7 +20,7 @@ const debug = parseBoolean(process.env.DEBUG);
 
 const version = process.env.npm_package_version;
 
-const permissions = new Set(['SEND_MESSAGES', 'VIEW_CHANNEL']);
+const permissions = new Set();
 
 const registerPermission = (perm) => {
     permissions.add(perm);
