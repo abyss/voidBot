@@ -12,5 +12,8 @@ node_modules
 data
 .env
 
+# Jest
+coverage/
+
 # Editor
 .vscode

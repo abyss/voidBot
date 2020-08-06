@@ -6,7 +6,9 @@
   "license": "MIT",
   "scripts": {
     "start": "node index.js",
-    "lint": "eslint \"src/**\" index.js"
+    "lint": "eslint \"src/**\" index.js",
+    "test": "jest --runInBand --forceExit",
+    "test:coverage": "jest --runInBand --forceExit --coverage"
   },
   "dependencies": {
     "chalk": "^4.0.0",
@@ -20,6 +22,11 @@
     "moment-duration-format": "^2.3.2"
   },
   "devDependencies": {
-    "eslint": "^7.0.0"
+    "eslint": "^7.0.0",
+    "jest": "^26.2.2"
+  },
+  "jest": {
+    "verbose": true,
+    "testEnvironment": "node"
   }
 }

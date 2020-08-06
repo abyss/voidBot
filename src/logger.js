@@ -1,4 +1,5 @@
 // TODO: Use real logger library
+// TODO: properly handle NODE_ENV (production, development, test)
 
 const chalk = require('chalk');
 
@@ -14,6 +15,13 @@ function init(conf) {
     if (conf.debug === false) config.debug = false;
     if (conf.error === false) config.error = false;
     if (conf.log === false) config.log = false;
+
+    // When testing, I only want to see errors
+    if (process.env.NODE_ENV === 'test') {
+        config.log = false;
+        config.debug = false;
+        config.error = true;
+    }
 }
 
 function debug(...output) {
