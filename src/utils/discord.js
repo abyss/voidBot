@@ -125,10 +125,11 @@ exports.cleanPermissions = async function (guild) {
 };
 
 exports.allServerUpkeep = async function () {
-    asyncForEach(bot.client.guilds.cache.array(), async (guild) => {
+    // TODO: Convert to Promise.all() for parallel.
+    for (const guild of bot.client.guilds.cache.array()) {
         await exports.serverStats(guild);
         await exports.cleanPermissions(guild);
-    });
+    }
 };
 
 exports.userColor = function (user, guild) {

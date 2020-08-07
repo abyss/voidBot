@@ -1,11 +1,5 @@
 const { stripIndents, TemplateTag } = require('common-tags');
 
-exports.asyncForEach = async function asyncForEach(array, callback) {
-    for (let i = 0; i < array.length; i++) {
-        await callback(array[i], i, array);
-    }
-};
-
 exports.parseBoolean = function (input) {
     if (typeof input === 'string') {
         input = input.toLowerCase();
@@ -19,8 +13,11 @@ exports.parseBoolean = function (input) {
     else return false;
 };
 
-// Fisher-Yates shuffle in place
-exports.shuffleArray = function (array) {
+// Fisher-Yates shuffle
+// TODO: Should be refactored. Code will need updated elsewhere.
+exports.shuffleArray = function (origArray) {
+    let array = [...origArray];
+
     let m = array.length;
     let t, i;
 
