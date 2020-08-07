@@ -1,6 +1,5 @@
 const logger = require('../logger');
-const { userColor } = require('./colors');
-const { getGuildPrefix } = require('./discord');
+const { getGuildPrefix, userColor } = require('./discord');
 const bot = require('../bot');
 
 async function send(channel, ...msg) {

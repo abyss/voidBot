@@ -42,7 +42,7 @@ exports.findExactRole = function (guild, roleText) {
 exports.findRole = function (guild, roleText) {
     const options = {
         shouldSort: true,
-        threshhold: 0.3, // between 0 (perfect) to 1 (complete mismatch)
+        threshold: 0.6, // between 0 (perfect) to 1 (complete mismatch)
         location: 0,
         distance: 100,
         maxPatternLength: 20,
@@ -68,7 +68,7 @@ exports.findRole = function (guild, roleText) {
 exports.findMember = function (guild, userText) {
     const options = {
         shouldSort: true,
-        threshhold: 0.3, // between 0 (perfect) to 1 (complete mismatch)
+        threshold: 0.6, // between 0 (perfect) to 1 (complete mismatch)
         location: 0,
         distance: 100,
         maxPatternLength: 20,
@@ -129,6 +129,16 @@ exports.allServerUpkeep = async function () {
         await exports.serverStats(guild);
         await exports.cleanPermissions(guild);
     });
+};
+
+exports.userColor = function (user, guild) {
+    const uid = exports.resolveId(user);
+
+    if (guild) {
+        return guild.members.cache.get(uid).displayColor;
+    } else {
+        return 'C27C0E';
+    }
 };
 
 // Extend flags to include NOONE

@@ -1,7 +1,6 @@
 const bot = require('../../../bot');
 const { send } = require('../../../utils/chat');
-const { getGuildPrefix } = require('../../../utils/discord');
-const { userColor } = require('../../../utils/colors');
+const { getGuildPrefix, userColor } = require('../../../utils/discord');
 const { sendCommandHelp } = require('../../../utils/chat');
 const { stripIndentsExtra } = require('../../../utils/general');
 const { checkDebug, moduleEnabled, hasPermission, validLocation } = require('../../../modular-commands/permissions');
