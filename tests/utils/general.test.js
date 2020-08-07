@@ -44,5 +44,14 @@ describe('general util', () => {
         });
     });
 
-    describe.skip('stripIndentsExtra');
+    describe('stripIndentsExtra', () => {
+        test('strips indents with an escaped newline', () => {
+            const testString = general.stripIndentsExtra`
+                line 1 \
+                line 2 \
+                line 3
+            `;
+            expect(testString).toEqual('line 1 line 2 line 3');
+        });
+    });
 });

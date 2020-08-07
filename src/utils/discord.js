@@ -1,7 +1,6 @@
 const Fuse = require('fuse.js');
 const bot = require('../bot');
 const { FLAGS } = require('discord.js').Permissions;
-const { asyncForEach } = require('./general');
 
 exports.resolveId = function (obj) {
     if (typeof obj === 'string') {
