@@ -7,7 +7,7 @@ bot.config = require('./config');
 
 // Startup Logger
 const logger = require('./logger');
-logger.init({ debug: bot.config.debug });
+logger.init();
 bot.log = logger.log;
 bot.error = logger.error;
 bot.debug = logger.debug;

@@ -1,6 +1,5 @@
 const path = require('path');
 
-const { parseBoolean } = require('./utils/general');
 const { resolveId } = require('./utils/discord');
 
 if (!process.env.TOKEN || !/^[A-Za-z0-9._-]+$/.test(process.env.TOKEN)) {
@@ -15,8 +14,6 @@ const dataFolder = process.env.DATA_FOLDER || 'data';
 const owners = process.env.OWNER ? process.env.OWNER.split(',') : '';
 
 const prefix = process.env.DEFAULT_PREFIX || '/';
-
-const debug = parseBoolean(process.env.DEBUG);
 
 const version = process.env.npm_package_version;
 
@@ -38,7 +35,6 @@ module.exports = {
     dataFolder,
     owners,
     prefix,
-    debug,
     version,
     isOwner,
     registerPermission,
