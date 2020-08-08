@@ -29,6 +29,7 @@
   },
   "jest": {
     "verbose": true,
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": ["./tests/extra-matchers.js"]
   }
 }
