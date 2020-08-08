@@ -8,7 +8,9 @@
     "start": "node index.js",
     "lint": "eslint \"src/**\" index.js",
     "test": "jest --runInBand",
-    "test:coverage": "jest --runInBand --coverage"
+    "test:changes": "jest --runInBand -o",
+    "test:coverage": "jest --runInBand --coverage",
+    "test:full": "eslint \"src/**\" index.js && jest --runInBand --coverage"
   },
   "dependencies": {
     "chalk": "^4.1.0",
