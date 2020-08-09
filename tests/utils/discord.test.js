@@ -110,4 +110,112 @@ describe('discord util', () => {
             expect(result).not.toBeDefined();
         });
     });
+
+    describe('findRole', () => {
+        const guild = {
+            roles: {
+                cache: [
+                    { name: '@everyone', id: '54321' },
+                    { name: 'role-name', id: '12345' },
+                    { name: 'role-long', id: '123456789012345678' }
+                ]
+            }
+        };
+
+        test('returns correct role when text is a tag', () => {
+            const role = '<@&123456789012345678>';
+            const result = discord.findRole(guild, role);
+            expect(result).toBe(guild.roles.cache[2]);
+        });
+
+        test('returns correct role when text is the id', () => {
+            const role = guild.roles.cache[1].id;
+            const result = discord.findRole(guild, role);
+            expect(result).toBe(guild.roles.cache[1]);
+        });
+
+        test('returns correct role when text is the name', () => {
+            const role = guild.roles.cache[1].name;
+            const result = discord.findRole(guild, role);
+            expect(result).toBe(guild.roles.cache[1]);
+        });
+
+        test('returns correct role when text is slightly different than the name', () => {
+            const role = 'role_nme';
+            const result = discord.findRole(guild, role);
+            expect(result).toBe(guild.roles.cache[1]);
+        });
+
+        test('returns undefined when no role found', () => {
+            const role = 'wat';
+            const result = discord.findRole(guild, role);
+            expect(result).not.toBeDefined();
+        });
+    });
+
+    describe('findMember', () => {
+        const guild = {
+            members: {
+                cache: [
+                    {
+                        displayName: 'member-name',
+                        id: '54321',
+                        user: { tag: 'member#0473' }
+                    },
+                    {
+                        displayName: 'member-long',
+                        id: '123456789012345678',
+                        user: { tag: 'other#6777' }
+                    }
+                ]
+            }
+        };
+
+        test('returns correct member when text is a tag', () => {
+            let member = '<@123456789012345678>';
+            let result = discord.findMember(guild, member);
+            expect(result).toBe(guild.members.cache[1]);
+
+            // test other tag syntax
+            member = '<@!123456789012345678>';
+            result = discord.findMember(guild, member);
+            expect(result).toBe(guild.members.cache[1]);
+        });
+
+        test('returns correct member when text is the id', () => {
+            const member = guild.members.cache[1].id;
+            const result = discord.findMember(guild, member);
+            expect(result).toBe(guild.members.cache[1]);
+        });
+
+        test('returns correct member when text is the displayName', () => {
+            const member = guild.members.cache[1].displayName;
+            const result = discord.findMember(guild, member);
+            expect(result).toBe(guild.members.cache[1]);
+        });
+
+        test('returns correct member when text is slightly different than the displayName', () => {
+            const member = 'member_nme';
+            const result = discord.findMember(guild, member);
+            expect(result).toBe(guild.members.cache[0]);
+        });
+
+        test('returns correct member when text is the username', () => {
+            const member = guild.members.cache[1].user.tag;
+            const result = discord.findMember(guild, member);
+            expect(result).toBe(guild.members.cache[1]);
+        });
+
+        test('returns correct member when text is slightly different than the username', () => {
+            const member = 'othello#6777';
+            const result = discord.findMember(guild, member);
+            expect(result).toBe(guild.members.cache[1]);
+        });
+
+        test('returns undefined when no member found', () => {
+            const member = 'wat';
+            const result = discord.findMember(guild, member);
+            expect(result).not.toBeDefined();
+        });
+    });
 });
