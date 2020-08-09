@@ -98,7 +98,7 @@ exports.serverStats = async function (guild) {
         id: guild.id,
         name: guild.name,
         owner: {
-            id: guild.id,
+            id: guild.owner.user.id,
             tag: guild.owner.user.tag
         }
     };
