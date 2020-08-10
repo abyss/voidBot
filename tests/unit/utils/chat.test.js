@@ -1,14 +1,14 @@
 // Mocks before require()
-jest.mock('../../src/logger', () => ({
+jest.mock('../../../src/logger', () => ({
     error: jest.fn()
 }));
 
-jest.mock('../../src/utils/discord', () => ({
+jest.mock('../../../src/utils/discord', () => ({
     getGuildPrefix: jest.fn(),
     userColor: jest.fn().mockReturnValue('PURPLE')
 }));
 
-jest.mock('../../src/bot', () => ({
+jest.mock('../../../src/bot', () => ({
     client: {
         user: {
             id: 1,
@@ -17,12 +17,16 @@ jest.mock('../../src/bot', () => ({
     }
 }));
 
-const chat = require('../../src/utils/chat');
+const chat = require('../../../src/utils/chat');
 
-describe('chat util', () => {
+describe('chat util unit tests', () => {
     describe('send', () => {
-        const channel = {};
-        const message = 'test message';
+        let channel, message;
+
+        beforeAll(() => {
+            channel = {};
+            message = 'test message';
+        });
 
         test('channel.send is called', async () => {
             channel.send = jest.fn().mockResolvedValue();
@@ -49,19 +53,23 @@ describe('chat util', () => {
     });
 
     describe('sendCommandHelp', () => {
-        const channel = {
-            guild: '1',
-            send: jest.fn().mockResolvedValue()
-        };
+        let channel, command;
 
-        const command = {
-            config: {
-                cmd: 'test',
-                name: 'Test',
-                description: 'test description',
-            },
-            usage: new Map()
-        };
+        beforeAll(() => {
+            channel = {
+                guild: '1',
+                send: jest.fn().mockResolvedValue()
+            };
+
+            command = {
+                config: {
+                    cmd: 'test',
+                    name: 'Test',
+                    description: 'test description',
+                },
+                usage: new Map()
+            };
+        });
 
         afterEach(() => {
             channel.send.mockClear();

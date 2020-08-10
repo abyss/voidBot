@@ -1,6 +1,6 @@
-const general = require('../../src/utils/general');
+const general = require('../../../src/utils/general');
 
-describe('general util', () => {
+describe('general util unit tests', () => {
     describe('parseBoolean', () => {
         test.each([
             [true, true], // bool
@@ -51,6 +51,7 @@ describe('general util', () => {
                 line 2 \
                 line 3
             `;
+
             expect(testString).toEqual('line 1 line 2 line 3');
         });
     });

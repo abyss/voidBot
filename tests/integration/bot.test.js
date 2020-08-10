@@ -2,7 +2,9 @@ let bot;
 
 describe('bot smoke test', () => {
     test('can startup', () => {
-        bot = require('../src/bot');
+        expect(() => {
+            bot = require('../../src/bot');
+        }).not.toThrow();
     });
 
     test('has a discord client', () => {
@@ -10,6 +12,8 @@ describe('bot smoke test', () => {
     });
 
     test('can be destroyed', () => {
-        bot.client.destroy();
+        expect(() => {
+            bot.client.destroy();
+        }).not.toThrow();
     });
 });
