@@ -7,10 +7,10 @@
   "scripts": {
     "start": "node index.js",
     "lint": "eslint \"src/**\" index.js",
-    "test": "jest --runInBand",
-    "test:changes": "jest --runInBand -o",
-    "test:coverage": "jest --runInBand --coverage",
-    "test:full": "eslint \"src/**\" index.js && jest --runInBand --coverage"
+    "test": "jest",
+    "test:changes": "jest -o",
+    "test:coverage": "jest --coverage",
+    "test:full": "eslint \"src/**\" index.js && jest --coverage"
   },
   "dependencies": {
     "chalk": "^4.1.0",
