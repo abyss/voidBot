@@ -24,8 +24,7 @@ bot.client.user = {
     tag: 'user#1234',
     setPresence: jest.fn()
 };
-bot.client.generateInvite = jest.fn().mockResolvedValue('invite_link');
-
+bot.client.generateInvite = jest.fn().mockResolvedValue('https://invitelink');
 bot.client.users = { cache: new Map() };
 bot.client.guilds = { cache: new Map() };
 
@@ -38,6 +37,8 @@ bot.commands = {
     processor: jest.fn()
 };
 
+const discordUtil = require('../../src/utils/discord');
+
 describe('bot unit tests', () => {
     test('on(ready) does not throw', () => {
         expect(() => {
@@ -45,7 +46,7 @@ describe('bot unit tests', () => {
         }).not.toThrow();
     });
 
-    describe('on(message', () => {
+    describe('on(message)', () => {
         let message;
 
         beforeAll(() => {
@@ -61,21 +62,53 @@ describe('bot unit tests', () => {
             bot.commands.processor.mockClear();
         });
 
-        test('on(message) does not throw', () => {
+        test('does not throw', () => {
             expect(() => {
                 bot.client.emit('message', message);
             }).not.toThrow();
         });
 
-        test('on(message) calls command processor', () => {
+        test('calls command processor', () => {
             bot.client.emit('message', message);
             expect(bot.commands.processor).toHaveBeenCalled();
         });
 
-        test('on(message) does not call command processor for bot messages', () => {
+        test('does not call command processor for bot messages', () => {
             message.author.bot = true;
             bot.client.emit('message', message);
             expect(bot.commands.processor).not.toHaveBeenCalled();
         });
+    });
+
+    describe('on(guildCreate)', () => {
+        let guild;
+
+        beforeAll(() => {
+            guild = {
+                name: 'guild',
+                id: '12345'
+            };
+        });
+
+        afterEach(() => {
+            discordUtil.serverStats.mockClear();
+        });
+
+        test('does not throw', () => {
+            expect(() => {
+                bot.client.emit('guildCreate', guild);
+            }).not.toThrow();
+        });
+
+        test('calls serverStats', () => {
+            bot.client.emit('guildCreate', guild);
+            expect(discordUtil.serverStats).toHaveBeenCalled();
+        });
+    });
+
+    test('on(error) does not throw when passed an error', () => {
+        expect(() => {
+            bot.client.emit('error', new Error('test'));
+        }).not.toThrow();
     });
 });

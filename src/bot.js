@@ -38,6 +38,6 @@ client.on('guildCreate', guild => {
 });
 
 client.on('error', err => {
-    const errorMsg = (err.stack || err.error || err || '').toString();
-    bot.error(`discord.js Error: \n${errorMsg}`);
+    bot.error('discord.js Error:');
+    bot.error(err);
 });
