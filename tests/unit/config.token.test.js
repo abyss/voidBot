@@ -2,15 +2,17 @@
 // and we don't want to load the entire bot startup.
 jest.mock('../../src/bot', () => ({}));
 
-test('config throws on missing token', () => {
-    delete process.env.TOKEN;
+describe('config.token unit tests', () => {
+    test('config throws on missing token', () => {
+        delete process.env.TOKEN;
 
-    const consoleErrorToRestore = console.error;
-    console.error = jest.fn();
+        const consoleErrorToRestore = console.error;
+        console.error = jest.fn();
 
-    expect(() => {
-        require('../../src/config');
-    }).toThrow();
+        expect(() => {
+            require('../../src/config');
+        }).toThrow();
 
-    console.error = consoleErrorToRestore;
+        console.error = consoleErrorToRestore;
+    });
 });
