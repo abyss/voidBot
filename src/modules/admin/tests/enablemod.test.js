@@ -84,5 +84,31 @@ describe('admin.enablemod command', () => {
         );
     });
 
-    test.todo('non-private modules');
+    test('sets in db if not private mod and msg author is not owner', async () => {
+        mockModule.config.private = false;
+        modLoader.getModule.mockReturnValue(mockModule);
+        bot.config.isOwner.mockReturnValue(false);
+
+        await enablemod.run(msg, args);
+
+        expect(bot.db.set).toHaveBeenCalledWith(
+            msg.guild,
+            expect.stringContaining('test'),
+            true
+        );
+    });
+
+    test('sets in db if not private mod and msg author is an owner', async () => {
+        mockModule.config.private = false;
+        modLoader.getModule.mockReturnValue(mockModule);
+        bot.config.isOwner.mockReturnValue(true);
+
+        await enablemod.run(msg, args);
+
+        expect(bot.db.set).toHaveBeenCalledWith(
+            msg.guild,
+            expect.stringContaining('test'),
+            true
+        );
+    });
 });
