@@ -1,5 +1,3 @@
-// Mock bot because config requires discord requires bot,
-// and we don't want to load the entire bot startup.
 jest.mock('../../../bot', () => ({
     db: {
         set: jest.fn()
