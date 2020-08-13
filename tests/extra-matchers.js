@@ -35,5 +35,44 @@ expect.extend({
         } catch (err) {
             return fail;
         }
+    },
+
+    embedContaining(received, containing) {
+        const pass = {
+            message: () => {
+                `expected ${received} not to be Embed containing ${containing}`;
+            },
+            'pass': true
+        };
+
+        const fail = {
+            message: () => {
+                `expected ${received} to be Embed containing ${containing}`;
+            },
+            'pass': false
+        };
+
+        try {
+            if (!received) return fail;
+
+            if (typeof received.title === 'string') {
+                if (received.title.includes(containing)) return pass;
+            }
+
+            if (typeof received.description === 'string') {
+                if (received.description.includes(containing)) return pass;
+            }
+
+            if (Array.isArray(received.fields)) {
+                for (let embedField of received.fields) {
+                    if (embedField.name.includes(containing)) return pass;
+                    if (embedField.value.includes(containing)) return pass;
+                }
+            }
+
+            return fail;
+        } catch (err) {
+            return fail;
+        }
     }
 });

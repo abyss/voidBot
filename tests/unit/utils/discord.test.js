@@ -296,7 +296,7 @@ describe('discord util unit tests', () => {
                 id: '12345',
                 name: 'Name',
                 roles: {
-                    cache: new Map()
+                    cache: new Collection()
                 }
             };
         });

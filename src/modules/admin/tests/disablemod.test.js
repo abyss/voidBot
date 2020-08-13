@@ -54,7 +54,7 @@ describe('admin.disablemod command', () => {
 
         const result = await disablemod.run(msg, args);
 
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
     });
 
 

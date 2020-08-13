@@ -55,7 +55,7 @@ describe('admin.enablemod command', () => {
 
         const result = await enablemod.run(msg, args);
 
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
     });
 
     test('return false if private mod and msg author is not owner', async () => {
@@ -65,7 +65,7 @@ describe('admin.enablemod command', () => {
 
         const result = await enablemod.run(msg, args);
 
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
     });
 
     test('sets in db if private mod and msg author is an owner', async () => {
