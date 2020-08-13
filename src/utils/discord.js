@@ -3,13 +3,11 @@ const bot = require('../bot');
 const { FLAGS } = require('discord.js').Permissions;
 
 exports.resolveId = function (obj) {
-    if (typeof obj === 'string') {
-        return obj;
-    } else if (typeof obj.id === 'string') {
-        return obj.id;
-    } else {
-        return '';
-    }
+    if (!obj) return '';
+    if (typeof obj === 'string') return obj;
+    if (typeof obj.id === 'string') return obj.id;
+
+    return '';
 };
 
 exports.getGuildPrefix = async function (guild) {

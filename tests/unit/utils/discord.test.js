@@ -46,6 +46,12 @@ describe('discord util unit tests', () => {
             const result = discord.resolveId(data);
             expect(result).toBe('');
         });
+
+        test('returns an empty string when passed undefined', () => {
+            const data = undefined;
+            const result = discord.resolveId(data);
+            expect(result).toBe('');
+        });
     });
 
     describe('getGuildPrefix', () => {
@@ -55,7 +61,7 @@ describe('discord util unit tests', () => {
             expect(result).toBe('');
         });
 
-        test('returns the correct prefix', async () => {
+        test('returns the correct prefix when guild is valid', async () => {
             const prefix = '%';
             bot.db.get = jest.fn().mockReturnValue(prefix);
             const result = await discord.getGuildPrefix('1');
