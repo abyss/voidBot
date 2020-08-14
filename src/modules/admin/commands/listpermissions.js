@@ -91,7 +91,8 @@ async function listCommandPermissions(msg, cmdText) {
         return false;
     }
 
-    const permissions = await bot.db.get(msg.guild, `permissions.${command.id}`);
+    let permissions = await bot.db.get(msg.guild, `permissions.${command.id}`);
+    if (typeof permissions !== 'object') permissions = {};
     const field = await getCommandPermOutput(command, msg.guild, permissions, true);
 
     if (field) {

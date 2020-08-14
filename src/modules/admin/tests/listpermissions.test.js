@@ -100,7 +100,7 @@ describe('admin.listpermissions command', () => {
 
             expect(chat.send).toBeCalledWith(
                 msg.channel,
-                expect.embedContaining('@first-role')
+                expect.embedContaining('@first-role - allow')
             );
         });
 
@@ -128,7 +128,37 @@ describe('admin.listpermissions command', () => {
 
             expect(chat.send).toBeCalledWith(
                 msg.channel,
-                expect.embedContaining('MANAGE_GUILD - allow')
+                expect.embedContaining('@everyone - allow')
+            );
+        });
+
+        test('passed command with default deny everyone sends embed with info', async () => {
+            command.config.defaultPermissions = ['NOONE'];
+
+            bot.commands.lookup.getCommand.mockReturnValue(command);
+
+            bot.db.get.mockReturnValue({});
+
+            await listpermissions.run(msg, args);
+
+            expect(chat.send).toBeCalledWith(
+                msg.channel,
+                expect.embedContaining('@everyone - deny')
+            );
+        });
+
+        test('regression: passed command with no permissions in database does not throw', async () => {
+            command.config.defaultPermissions = ['NOONE'];
+
+            bot.commands.lookup.getCommand.mockReturnValue(command);
+
+            bot.db.get.mockReturnValue();
+
+            await listpermissions.run(msg, args);
+
+            expect(chat.send).toBeCalledWith(
+                msg.channel,
+                expect.embedContaining('@everyone - deny')
             );
         });
     });
