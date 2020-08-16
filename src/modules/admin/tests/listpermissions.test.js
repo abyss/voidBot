@@ -161,5 +161,20 @@ describe('admin.listpermissions command', () => {
                 expect.embedContaining('@everyone - deny')
             );
         });
+
+        test('passed command with default allow everyone sends embed with info', async () => {
+            command.config.defaultPermissions = [];
+
+            bot.commands.lookup.getCommand.mockReturnValue(command);
+
+            bot.db.get.mockReturnValue({});
+
+            await listpermissions.run(msg, args);
+
+            expect(chat.send).toBeCalledWith(
+                msg.channel,
+                expect.embedContaining('@everyone - allow')
+            );
+        });
     });
 });
