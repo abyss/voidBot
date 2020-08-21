@@ -177,4 +177,162 @@ describe('admin.listpermissions command', () => {
             );
         });
     });
+
+    describe('list all permissions (listAllPermissions)', () => {
+        let msg, args, command, command2;
+        let guildId, roleOneId, roleTwoId;
+
+        beforeAll(() => {
+            guildId = '111111111111111111';
+            roleOneId = '123456789012345678';
+            roleTwoId = '987654321098765432';
+
+            msg = {
+                channel: {},
+                guild: {
+                    id: guildId,
+                    roles: {
+                        cache: new Collection()
+                    }
+                }
+            };
+
+            msg.guild.roles.cache.set(guildId, {
+                toString: () => '@everyone',
+                id: guildId,
+                calculatedPosition: 0
+            });
+
+            msg.guild.roles.cache.set(roleOneId, {
+                toString: () => '@first-role',
+                id: roleOneId,
+                calculatedPosition: 1
+            });
+
+            msg.guild.roles.cache.set(roleTwoId, {
+                toString: () => '@second-role',
+                id: roleTwoId,
+                calculatedPosition: 2
+            });
+
+            args = [];
+
+            command = {
+                id: 'command-one',
+                config: {
+                    cmd: 'command-one-cmd',
+                    defaultPermissions: ['MANAGE_GUILD'],
+                }
+            };
+
+            command2 = {
+                id: 'command-two',
+                config: {
+                    cmd: 'command-two-cmd',
+                    defaultPermissions: [],
+                }
+            };
+        });
+
+        afterEach(() => {
+            chat.send.mockClear();
+        });
+
+        test('lists different commands permissions', async () => {
+            bot.commands.lookup.getCommand
+                .mockReturnValueOnce(command)
+                .mockReturnValueOnce(command2)
+                .mockReturnValue();
+
+            bot.db.get.mockReturnValue({
+                'command-one': {
+                    [roleOneId]: 'allow',
+                    [roleTwoId]: 'deny'
+                },
+                'command-two': {
+                    [roleOneId]: 'deny',
+                    [roleTwoId]: 'deny'
+                }
+            });
+
+            await listpermissions.run(msg, args);
+
+            expect(chat.send).toBeCalledWith(
+                msg.channel,
+                expect.embedContaining('@first-role - allow')
+            );
+            expect(chat.send).toBeCalledWith(
+                msg.channel,
+                expect.embedContaining('@first-role - deny')
+            );
+        });
+
+        test('does not throw if database is empty', async () => {
+            bot.commands.lookup.getCommand.mockReturnValue();
+
+            bot.db.get.mockReturnValue(undefined);
+
+            await expect(listpermissions.run(msg, args)).resolves.toBeUndefined();
+        });
+
+        test('lists other commands if a command in database is not found by getCommand', async () => {
+            bot.commands.lookup.getCommand
+                .mockReturnValueOnce(command)
+                .mockReturnValueOnce(command2)
+                .mockReturnValue();
+
+            bot.db.get.mockReturnValue({
+                'command-one': {
+                    [roleOneId]: 'allow',
+                    [roleTwoId]: 'deny'
+                },
+                'command-two': {
+                    [roleOneId]: 'deny',
+                    [roleTwoId]: 'deny'
+                },
+                'non-existent-command': {
+                    [roleOneId]: 'allow'
+                }
+            });
+
+            await expect(listpermissions.run(msg, args)).resolves.toBeUndefined();
+
+            expect(chat.send).toBeCalledWith(
+                msg.channel,
+                expect.embedContaining('@first-role - allow')
+            );
+
+            expect(chat.send).toBeCalledWith(
+                msg.channel,
+                expect.embedContaining('@first-role - deny')
+            );
+        });
+
+        test('skips commands that are default', async () => {
+            bot.commands.lookup.getCommand
+                .mockReturnValueOnce(command)
+                .mockReturnValueOnce(command2)
+                .mockReturnValue();
+
+            bot.db.get.mockReturnValue({
+                'command-one': {},
+                'command-two': {
+                    [roleOneId]: 'deny',
+                    [roleTwoId]: 'deny'
+                }
+            });
+
+            await listpermissions.run(msg, args);
+
+            expect(chat.send).toBeCalledWith(
+                msg.channel,
+                expect.not.embedContaining('@first-role - allow')
+            );
+
+            expect(chat.send).toBeCalledWith(
+                msg.channel,
+                expect.embedContaining('@first-role - deny')
+            );
+        });
+    });
 });
