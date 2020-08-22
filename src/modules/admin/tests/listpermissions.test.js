@@ -176,6 +176,57 @@ describe('admin.listpermissions command', () => {
                 expect.embedContaining('@everyone - allow')
             );
         });
+
+        test('does not throw when permissions exist in database for a role that no longer exists', async () => {
+            command.config.defaultPermissions = [];
+
+            bot.commands.lookup.getCommand.mockReturnValue(command);
+
+            bot.db.get.mockReturnValue({
+                'non-existent-role': 'allow'
+            });
+
+            await expect(listpermissions.run(msg, args)).resolves.toBeUndefined();
+
+            expect(chat.send).toBeCalledWith(
+                msg.channel,
+                expect.embedContaining('@everyone - allow')
+            );
+        });
+
+        test('everyone modified with default noone sends embed with info', async () => {
+            command.config.defaultPermissions = ['NOONE'];
+
+            bot.commands.lookup.getCommand.mockReturnValue(command);
+
+            bot.db.get.mockReturnValue({
+                [guildId]: 'allow'
+            });
+
+            await listpermissions.run(msg, args);
+
+            expect(chat.send).toBeCalledWith(
+                msg.channel,
+                expect.embedContaining('@everyone - allow')
+            );
+        });
+
+        test('everyone modified with default everyone allowed sends embed with info', async () => {
+            command.config.defaultPermissions = [];
+
+            bot.commands.lookup.getCommand.mockReturnValue(command);
+
+            bot.db.get.mockReturnValue({
+                [guildId]: 'deny'
+            });
+
+            await listpermissions.run(msg, args);
+
+            expect(chat.send).toBeCalledWith(
+                msg.channel,
+                expect.embedContaining('@everyone - deny')
+            );
+        });
     });
 
     describe('list all permissions (listAllPermissions)', () => {
