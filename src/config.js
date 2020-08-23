@@ -15,7 +15,7 @@ const owners = process.env.OWNER ? process.env.OWNER.split(',') : [];
 
 const prefix = process.env.DEFAULT_PREFIX || '/';
 
-const version = process.env.npm_package_version;
+const version = process.env.npm_package_version || '0.0.0';
 
 const permissions = new Set();
 
