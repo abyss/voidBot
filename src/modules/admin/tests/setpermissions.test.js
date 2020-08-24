@@ -23,25 +23,48 @@ jest.mock('../../../utils/discord', () => ({
     findRole: jest.fn()
 }));
 
+jest.mock('../../../modular-commands/permissions', () => ({
+    hasPermission: jest.fn().mockResolvedValue(),
+    setPermission: jest.fn().mockResolvedValue()
+}));
+
 const bot = require('../../../bot');
 const chat = require('../../../utils/chat');
 const discord = require('../../../utils/discord');
 const setpermissions = require('../commands/setpermissions');
+const { hasPermission, setPermission } = require('../../../modular-commands/permissions');
 
 describe('admin.setpermissions command', () => {
-    let msg, args;
+    let msg, args, command, role;
 
     beforeAll(() => {
         msg = {
             channel: {},
-            guild: {}
+            guild: {},
+            member: {
+                roles: {
+                    highest: {
+                        calculatedPosition: 2
+                    }
+                }
+            }
         };
 
         args = ['ping', 'everyone', 'allow'];
+        command = {
+            config: {
+                preventLockout: false
+            }
+        };
+        role = {
+            calculatedPosition: 1
+        };
     });
 
     afterEach(() => {
         chat.send.mockClear();
+        hasPermission.mockClear();
+        setPermission.mockClear();
     });
 
     test('run with less than 3 arguments returns false', async () => {
@@ -59,6 +82,7 @@ describe('admin.setpermissions command', () => {
     });
 
     test('role not found returns false', async () => {
+        bot.commands.lookup.getCommand.mockReturnValue(command);
         discord.findRole.mockReturnValue(undefined);
 
         const result = await setpermissions.run(msg, args);
@@ -67,10 +91,61 @@ describe('admin.setpermissions command', () => {
     });
 
     test('state not allowed returns false', async () => {
+        bot.commands.lookup.getCommand.mockReturnValue(command);
+        discord.findRole.mockReturnValue(role);
         args[2] = 'InvalidState';
 
         const result = await setpermissions.run(msg, args);
 
         expect(result).toBe(false);
+    });
+
+    test('role is higher than the users highest calculated position does not setPermission', async () => {
+        bot.commands.lookup.getCommand.mockReturnValue(command);
+        discord.findRole.mockReturnValue(role);
+        args[2] = 'allow';
+        role.calculatedPosition = 3;
+
+        await setpermissions.run(msg, args);
+
+        expect(setPermission).not.toHaveBeenCalled();
+    });
+
+    test('sets a permission of a command without preventLockout', async () => {
+        bot.commands.lookup.getCommand.mockReturnValue(command);
+        discord.findRole.mockReturnValue(role);
+        args[2] = 'allow';
+        role.calculatedPosition = 1;
+        command.config.preventLockout = false;
+
+        await setpermissions.run(msg, args);
+
+        expect(setPermission).toHaveBeenCalled();
+    });
+
+    test('sets a permission of a command with preventLockout when lockout would not occur', async () => {
+        bot.commands.lookup.getCommand.mockReturnValue(command);
+        discord.findRole.mockReturnValue(role);
+        args[2] = 'allow';
+        role.calculatedPosition = 1;
+        command.config.preventLockout = true;
+        hasPermission.mockResolvedValue(true);
+
+        await setpermissions.run(msg, args);
+
+        expect(setPermission).toHaveBeenCalledTimes(1);
+    });
+
+    test('sets then unsets a permission of a command with preventLockout when lockout would occur', async () => {
+        bot.commands.lookup.getCommand.mockReturnValue(command);
+        discord.findRole.mockReturnValue(role);
+        args[2] = 'allow';
+        role.calculatedPosition = 1;
+        command.config.preventLockout = true;
+        hasPermission.mockResolvedValue(false);
+
+        await setpermissions.run(msg, args);
+
+        expect(setPermission).toHaveBeenCalledTimes(2);
     });
 });
