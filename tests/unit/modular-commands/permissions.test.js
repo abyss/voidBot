@@ -11,6 +11,7 @@ jest.mock('../../../src/bot', () => ({
 
 const bot = require('../../../src/bot');
 const permissions = require('../../../src/modular-commands/permissions');
+const Collection = require('discord.js').Collection;
 
 describe('modular-commands - permissions unit tests', () => {
     describe('checkDebug', () => {
@@ -194,6 +195,69 @@ describe('modular-commands - permissions unit tests', () => {
             mod.config.enabled = false;
 
             const result = await permissions.moduleEnabled(undefined, mod);
+
+            expect(result).toBeFalsy();
+        });
+    });
+
+    describe('hasPermission', () => {
+        let guild, member, command;
+        let hasDefaultPermissionToRestore;
+
+        beforeAll(() => {
+            guild = {};
+            member = {
+                roles: {
+                    cache: new Collection()
+                }
+            };
+            command = {
+                id: '1234'
+            };
+
+            // Positions are ordered based on ID for test data
+            member.roles.cache.set('12345', {
+                id: '12345',
+                calculatedPosition: 2
+            });
+            member.roles.cache.set('67890', {
+                id: '67890',
+                calculatedPosition: 3
+            });
+            member.roles.cache.set('98765', {
+                id: '98765',
+                calculatedPosition: 4
+            });
+            member.roles.cache.set('09876', {
+                id: '09876',
+                calculatedPosition: 1
+            });
+        });
+
+        test('return true if guild is undefined', async () => {
+            const result = await permissions.hasPermission(undefined, member, command);
+
+            expect(result).toBeTruthy();
+        });
+
+        test('returns true if highest role in database is allow', async () => {
+            bot.db.get.mockResolvedValue({
+                '67890': 'allow',
+                '12345': 'deny'
+            });
+
+            const result = await permissions.hasPermission(guild, member, command);
+
+            expect(result).toBeTruthy();
+        });
+
+        test('returns false if highest role in database is deny', async () => {
+            bot.db.get.mockResolvedValue({
+                '67890': 'deny',
+                '12345': 'allow'
+            });
+
+            const result = await permissions.hasPermission(guild, member, command);
 
             expect(result).toBeFalsy();
         });
