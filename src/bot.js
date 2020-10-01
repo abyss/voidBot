@@ -3,7 +3,7 @@ const discordjs = require('discord.js');
 
 const bot = {};
 module.exports = bot;
-const client = new discordjs.Client();
+const client = new discordjs.Client({ ws:  { intents: discordjs.Intents.ALL }});
 bot.client = client;
 
 require('./startup');
