@@ -42,7 +42,7 @@ exports.run = async (msg, args) => {
         return false;
     }
 
-    if (msg.member.roles.highest.calculatedPosition < role.calculatedPosition) {
+    if (msg.member.roles.highest.position < role.position) {
         await send(msg.channel, 'You cannot modify the permissions of a role higher than you');
         return true;
     }

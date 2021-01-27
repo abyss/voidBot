@@ -5,6 +5,7 @@ jest.mock('discord.js', () => ({}));
 
 const discordjs = require('discord.js');
 discordjs.Client = EventEmitter;
+discordjs.Intents = {}; // Intents has to exist on discordjs
 
 // Mock startup and discord util module since those aren't being tested
 jest.mock('../../src/startup', () => {});

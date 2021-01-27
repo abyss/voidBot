@@ -44,7 +44,7 @@ describe('admin.setpermissions command', () => {
             member: {
                 roles: {
                     highest: {
-                        calculatedPosition: 2
+                        position: 2
                     }
                 }
             }
@@ -57,7 +57,7 @@ describe('admin.setpermissions command', () => {
             }
         };
         role = {
-            calculatedPosition: 1
+            position: 1
         };
     });
 
@@ -104,7 +104,7 @@ describe('admin.setpermissions command', () => {
         bot.commands.lookup.getCommand.mockReturnValue(command);
         discord.findRole.mockReturnValue(role);
         args[2] = 'allow';
-        role.calculatedPosition = 3;
+        role.position = 3;
 
         await setpermissions.run(msg, args);
 
@@ -115,7 +115,7 @@ describe('admin.setpermissions command', () => {
         bot.commands.lookup.getCommand.mockReturnValue(command);
         discord.findRole.mockReturnValue(role);
         args[2] = 'allow';
-        role.calculatedPosition = 1;
+        role.position = 1;
         command.config.preventLockout = false;
 
         await setpermissions.run(msg, args);
@@ -127,7 +127,7 @@ describe('admin.setpermissions command', () => {
         bot.commands.lookup.getCommand.mockReturnValue(command);
         discord.findRole.mockReturnValue(role);
         args[2] = 'allow';
-        role.calculatedPosition = 1;
+        role.position = 1;
         command.config.preventLockout = true;
         hasPermission.mockResolvedValue(true);
 
@@ -140,7 +140,7 @@ describe('admin.setpermissions command', () => {
         bot.commands.lookup.getCommand.mockReturnValue(command);
         discord.findRole.mockReturnValue(role);
         args[2] = 'allow';
-        role.calculatedPosition = 1;
+        role.position = 1;
         command.config.preventLockout = true;
         hasPermission.mockResolvedValue(false);
 

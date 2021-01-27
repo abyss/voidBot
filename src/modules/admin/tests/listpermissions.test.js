@@ -52,19 +52,19 @@ describe('admin.listpermissions command', () => {
             msg.guild.roles.cache.set(guildId, {
                 toString: () => '@everyone',
                 id: guildId,
-                calculatedPosition: 0
+                position: 0
             });
 
             msg.guild.roles.cache.set(roleOneId, {
                 toString: () => '@first-role',
                 id: roleOneId,
-                calculatedPosition: 1
+                position: 1
             });
 
             msg.guild.roles.cache.set(roleTwoId, {
                 toString: () => '@second-role',
                 id: roleTwoId,
-                calculatedPosition: 2
+                position: 2
             });
 
             args = ['command'];
@@ -251,19 +251,19 @@ describe('admin.listpermissions command', () => {
             msg.guild.roles.cache.set(guildId, {
                 toString: () => '@everyone',
                 id: guildId,
-                calculatedPosition: 0
+                position: 0
             });
 
             msg.guild.roles.cache.set(roleOneId, {
                 toString: () => '@first-role',
                 id: roleOneId,
-                calculatedPosition: 1
+                position: 1
             });
 
             msg.guild.roles.cache.set(roleTwoId, {
                 toString: () => '@second-role',
                 id: roleTwoId,
-                calculatedPosition: 2
+                position: 2
             });
 
             args = [];

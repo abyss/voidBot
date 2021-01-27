@@ -39,10 +39,10 @@ const hasPermission = async (guild, member, command) => {
 
     for (const [id, role] of member.roles.cache) {
         // highest position gets priority, in all non-undefined cases
-        if (role.calculatedPosition > position) {
+        if (role.position > position) {
             let newState = commandPermission[id];
             if (newState) {
-                position = role.calculatedPosition;
+                position = role.position;
                 state = newState;
             }
         }

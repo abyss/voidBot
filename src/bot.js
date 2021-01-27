@@ -18,7 +18,9 @@ client.on('ready', () => {
     client.user.setPresence({ activity: { name: `voidBot | @${client.user.username} help` }, status: 'online' });
     bot.log('Bot loaded!');
 
-    client.generateInvite(bot.config.permissions).then((invite_link) => {
+    client.generateInvite({
+        permissions: bot.config.permissions
+    }).then((invite_link) => {
         bot.log(`Invite Link: ${chalk.cyan.underline(invite_link)}`);
     });
 

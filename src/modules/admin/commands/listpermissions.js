@@ -16,7 +16,7 @@ async function getCommandPermOutput(command, guild, perms, showDefault = false) 
         if (!role) continue;
 
         commandPermissions.push({
-            position: role.calculatedPosition,
+            position: role.position,
             role: role,
             perm: rolePerm
         });

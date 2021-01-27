@@ -202,7 +202,7 @@ describe('modular-commands - permissions unit tests', () => {
 
     describe('hasPermission', () => {
         let guild, member, command;
-        let hasDefaultPermissionToRestore;
+        // let hasDefaultPermissionToRestore;
 
         beforeAll(() => {
             guild = {};
@@ -218,19 +218,19 @@ describe('modular-commands - permissions unit tests', () => {
             // Positions are ordered based on ID for test data
             member.roles.cache.set('12345', {
                 id: '12345',
-                calculatedPosition: 2
+                position: 2
             });
             member.roles.cache.set('67890', {
                 id: '67890',
-                calculatedPosition: 3
+                position: 3
             });
             member.roles.cache.set('98765', {
                 id: '98765',
-                calculatedPosition: 4
+                position: 4
             });
             member.roles.cache.set('09876', {
                 id: '09876',
-                calculatedPosition: 1
+                position: 1
             });
         });
 
