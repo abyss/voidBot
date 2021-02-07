@@ -121,12 +121,14 @@ exports.cleanPermissions = async function (guild) {
     }
 };
 
+exports.serverUpkeep = async function(guild) {
+    await exports.serverStats(guild);
+    await exports.cleanPermissions(guild);
+};
+
 exports.allServerUpkeep = async function () {
-    // TODO: Convert to Promise.all() for parallel.
-    for (const guild of bot.client.guilds.cache.array()) {
-        await exports.serverStats(guild);
-        await exports.cleanPermissions(guild);
-    }
+    const guildUpkeeps = bot.client.guilds.cache.map(guild => exports.serverUpkeep(guild));
+    await Promise.all(guildUpkeeps);
 };
 
 exports.userColor = function (user, guild) {
